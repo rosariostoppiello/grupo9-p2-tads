@@ -17,3 +17,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+dependencies {
+    implementation("com.opencsv:opencsv:5.9")
+}
