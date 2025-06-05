@@ -1,7 +1,11 @@
 package um.edu.uy;
 
+import um.edu.uy.importer.RatingsLoader;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        RatingsLoader.loadRatings("dataset-ratings_1mm.csv");
     }
+
+
 }
