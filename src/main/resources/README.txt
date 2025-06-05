@@ -1,0 +1,1 @@
+Esta carpeta debe tener el archivo credits.csv, movies_metadata.csv y ratings.csv

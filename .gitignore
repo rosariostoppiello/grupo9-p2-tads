@@ -41,5 +41,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-# No subir datasets pesados
-dataset/
+# No subir datasets
+src/main/resources/*.csv
+# Pero no ignorar el README
+!src/main/resources/README.txt
