@@ -7,24 +7,25 @@ import um.edu.uy.tads.hash.HashTable;
 
 public class UMovie {
 
-    private HashTable<String, Movie> moviesPorId;
-    private HashTable<String, Collection> collectionsPorId;
-    private HashTable<String, Genre> genresPorId;
+    private HashTable<String, Movie> moviesById;
+    private HashTable<String, Collection> collectionsById;
+    private HashTable<String, Genre> genresById;
+    private HashTable<String, Language> languagesByName;
 
     // constructor
     public UMovie() {
-        this.moviesPorId = new ClosedHashTableImpl<>(2000000, 1);
-        this.collectionsPorId = new ClosedHashTableImpl<>(5000, 1);
-        this.genresPorId = new ClosedHashTableImpl<>(100, 1);
+        this.moviesById = new ClosedHashTableImpl<>(2000000, 1);
+        this.collectionsById = new ClosedHashTableImpl<>(5000, 1);
+        this.genresById = new ClosedHashTableImpl<>(100, 1);
     }
 
     // load data
     public void loadMovies() {
-        MoviesMetadataLoader.loadMovies("dataset/movies_metadata.csv", moviesPorId, collectionsPorId, genresPorId);
+        MoviesMetadataLoader.loadMovies("dataset/movies_metadata.csv", moviesById, collectionsById, genresById);
     }
 
     public void loadRatings() {
-        RatingsLoader.loadRatings("dataset/ratings_1mm.csv", moviesPorId);
+        RatingsLoader.loadRatings("dataset/ratings_1mm.csv", moviesById);
     }
 
 

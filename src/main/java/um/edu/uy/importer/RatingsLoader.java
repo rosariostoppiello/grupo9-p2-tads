@@ -14,7 +14,8 @@ public class RatingsLoader {
 
     @SuppressWarnings("unchecked")
     public static void loadRatings(String csvFilePath, HashTable<String, Movie> moviesPorId) {
-        try(FileReader reader = new FileReader(csvFilePath)) {
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(csvFilePath)) {
             //
 
         } catch (IOException e) {

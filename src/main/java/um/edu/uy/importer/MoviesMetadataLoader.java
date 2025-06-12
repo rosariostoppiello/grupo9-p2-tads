@@ -15,9 +15,9 @@ public class MoviesMetadataLoader {
 
     @SuppressWarnings("unchecked")
     public static void loadMovies(String csvFilePath,
-                                  HashTable<String, Movie> moviesPorId,
-                                  HashTable<String, Collection> collectionsPorId,
-                                  HashTable<String, Genre> genresPorId) {
+                                  HashTable<String, Movie> moviesById,
+                                  HashTable<String, Collection> collectionsById,
+                                  HashTable<String, Genre> genresById) {
 
         // en vez de usar FileReader, uso BufferedReader para reducir la cantidad de operaciones I/O
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath), 65536)) {
