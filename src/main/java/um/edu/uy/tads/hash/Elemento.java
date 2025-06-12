@@ -1,10 +1,10 @@
 package um.edu.uy.tads.hash;
 
-public class Elemento<T> implements Comparable<Elemento<T>> {
-    private String clave;
+public class Elemento<K extends Comparable<K>, T> implements Comparable<Elemento<K, T>>  {
+    private K clave;
     private T valor;
 
-    public Elemento(String clave, T valor) {
+    public Elemento(K clave, T valor) {
         this.clave = clave;
         this.valor = valor;
     }
@@ -17,16 +17,16 @@ public class Elemento<T> implements Comparable<Elemento<T>> {
         this.valor = valor;
     }
 
-    public String getClave() {
+    public K getClave() {
         return clave;
     }
 
-    public void setClave(String clave) {
+    public void setClave(K clave) {
         this.clave = clave;
     }
 
     @Override
-    public int compareTo(Elemento<T> o) {
+    public int compareTo(Elemento<K, T> o) {
         return this.clave.compareTo(o.clave);
     }
 }

@@ -1,27 +1,20 @@
 package um.edu.uy.importer;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import um.edu.uy.entities.Rating;
-
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
+
+import um.edu.uy.entities.Movie;
+import um.edu.uy.entities.Rating;
+import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.HashTable;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class RatingsLoader {
-    public static void loadRatings (String csvFilePath) {
+
+    @SuppressWarnings("unchecked")
+    public static void loadRatings(String csvFilePath, HashTable<String, Movie> moviesPorId) {
         try(FileReader reader = new FileReader(csvFilePath)) {
-            CsvToBean<Rating> csvToBean = new CsvToBeanBuilder<Rating>(reader)
-                    .withType(Rating.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-
-            Iterator<Rating> iterator = csvToBean.iterator();
-
-            while (iterator.hasNext()) {
-                Rating rating = iterator.next();
-                System.out.println(rating);
-            }
+            //
 
         } catch (IOException e) {
             e.printStackTrace();
