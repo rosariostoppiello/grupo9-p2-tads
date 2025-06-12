@@ -1,6 +1,7 @@
 package um.edu.uy.importer;
 
 import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import um.edu.uy.entities.Movie;
