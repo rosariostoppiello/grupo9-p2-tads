@@ -12,6 +12,10 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T> implements HashTabl
     private final Elemento<K, T> elementoBorrado; // tombstone !!
     // del libro: "The tombstone indicates that a record once occupied the slot but does so no longer."
 
+    public int elementos() {
+        return elementos;
+    }
+
     @SuppressWarnings("unchecked")
     public ClosedHashTableImpl(int totalSize, int tipoResolucion) {
         this.totalSize = siguientePrimo(totalSize);

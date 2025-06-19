@@ -2,6 +2,7 @@ package um.edu.uy.entities;
 
 import um.edu.uy.importer.MoviesMetadataLoader;
 import um.edu.uy.importer.RatingsLoader;
+
 import um.edu.uy.tads.hash.ClosedHashTableImpl;
 import um.edu.uy.tads.hash.HashTable;
 
@@ -14,19 +15,51 @@ public class UMovie {
 
     // constructor
     public UMovie() {
-        this.moviesById = new ClosedHashTableImpl<>(2000000, 1);
-        this.collectionsById = new ClosedHashTableImpl<>(5000, 1);
-        this.genresById = new ClosedHashTableImpl<>(100, 1);
+        this.moviesById = new ClosedHashTableImpl<>(150000, 1);
+        this.collectionsById = new ClosedHashTableImpl<>(1699, 1);
+        this.genresById = new ClosedHashTableImpl<>(37, 1);
+        this.languagesByName = new ClosedHashTableImpl<>(71,1);
     }
 
     // load data
     public void loadMovies() {
-        MoviesMetadataLoader.loadMovies("dataset/movies_metadata.csv", moviesById, collectionsById, genresById);
+        MoviesMetadataLoader.loadMovies("movies_metadata.csv", moviesById, collectionsById, genresById, languagesByName);
     }
 
     public void loadRatings() {
-        RatingsLoader.loadRatings("dataset/ratings_1mm.csv", moviesById);
+        RatingsLoader.loadRatings("ratings_1mm.csv", moviesById);
     }
 
+    // getters and setters
+    public HashTable<String, Movie> getMoviesById() {
+        return moviesById;
+    }
 
+    public void setMoviesById(HashTable<String, Movie> moviesById) {
+        this.moviesById = moviesById;
+    }
+
+    public HashTable<String, Collection> getCollectionsById() {
+        return collectionsById;
+    }
+
+    public void setCollectionsById(HashTable<String, Collection> collectionsById) {
+        this.collectionsById = collectionsById;
+    }
+
+    public HashTable<String, Genre> getGenresById() {
+        return genresById;
+    }
+
+    public void setGenresById(HashTable<String, Genre> genresById) {
+        this.genresById = genresById;
+    }
+
+    public HashTable<String, Language> getLanguagesByName() {
+        return languagesByName;
+    }
+
+    public void setLanguagesByName(HashTable<String, Language> languagesByName) {
+        this.languagesByName = languagesByName;
+    }
 }

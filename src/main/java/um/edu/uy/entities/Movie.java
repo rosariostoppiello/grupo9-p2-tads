@@ -1,6 +1,7 @@
 package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class Movie implements Comparable<Movie> {
 
@@ -10,6 +11,17 @@ public class Movie implements Comparable<Movie> {
     private double revenue;
     private String belongsToCollection; // guarda id colección
     private MyList<Rating> ratings;
+
+    public Movie(String movieId, String title,
+                 String originalLanguage, String revenue,
+                 String belongsToCollection) {
+        this.movieId = movieId;
+        this.title = title;
+        this.originalLanguage = originalLanguage;
+        this.setRevenue(revenue);
+        this.belongsToCollection = belongsToCollection;
+        this.ratings = new MyLinkedListImpl<>();
+    }
 
     public String getBelongsToCollection() {
         return belongsToCollection;
@@ -47,8 +59,12 @@ public class Movie implements Comparable<Movie> {
         return revenue;
     }
 
-    public void setRevenue(double revenue) {
-        this.revenue = revenue;
+    public void setRevenue(String revenue) {
+        if (revenue == null || revenue.trim().isEmpty() || revenue.equals("0")) {
+            this.revenue = 0.0;
+        } else {
+            this.revenue = Double.parseDouble(revenue);
+        }
     }
 
     public MyList<Rating> getRatings() {

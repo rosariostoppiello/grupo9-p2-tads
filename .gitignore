@@ -42,4 +42,4 @@ bin/
 .DS_Store
 
 # No subir datasets
-/dataset/*.csv
+/*.csv

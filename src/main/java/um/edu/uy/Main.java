@@ -26,11 +26,16 @@ public class Main {
             option = scanner.nextInt();
 
             if (option == 1) {
-                uMovieSystem.loadMovies(); // movies y collections
+                long startTime = System.currentTimeMillis();
+                System.out.println("Cargando datos...");
+                uMovieSystem.loadMovies(); // movies, collections, languages, genres
                 uMovieSystem.loadRatings();
-                // Credits
-                System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: ");
-                // falta poner tiempo de ejecución de la carga
+                // uMovieSystem.loadCredits();
+                System.out.println(uMovieSystem.getMoviesById().elementos());
+
+                long endTime = System.currentTimeMillis();
+                System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + (endTime-startTime) + " ms");
+
             } else if (option == 2) {
                 consultas:
                 while (true) {
@@ -50,9 +55,14 @@ public class Main {
                     }
                     option = scanner.nextInt();
 
+                    long queryStart, queryEnd;
+
                     switch (option) {
                         case 1:
+                            queryStart = System.currentTimeMillis();
                             // Top 5 de las películas que más calificaciones por idioma
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta 1: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 2:
                             // Top 10 de las películas que mejor calificación media tienen por parte de los usuarios
@@ -75,7 +85,6 @@ public class Main {
                         default:
                             System.out.println("El número ingresado no se encuentra dentro de las opciones. Por favor, " +
                                     "elija un número entre los siguientes: 1, 2, 3, 4, 5, 6 o 7.");
-
                     }
                 }
             } else if (option == 3) {
@@ -86,6 +95,7 @@ public class Main {
                         "elija un número entre los siguientes: 1, 2 o 3.");
             }
         }
+        scanner.close();
     }
 
 }

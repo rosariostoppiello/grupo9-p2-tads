@@ -7,7 +7,14 @@ public class Rating implements Comparable<Rating> {
     private String userId;
     private String movieId;
     private Float rating;
-    private LocalDate timestamp;
+    private LocalDate date;
+
+    public Rating(String userId, String movieId, Float rating, LocalDate date) {
+        this.userId = userId;
+        this.movieId = movieId;
+        this.rating = rating;
+        this.date = date;
+    }
 
     @Override
     public int compareTo(Rating o) {
@@ -38,11 +45,11 @@ public class Rating implements Comparable<Rating> {
         this.rating = rating;
     }
 
-    public LocalDate getTimestamp() {
-        return timestamp;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

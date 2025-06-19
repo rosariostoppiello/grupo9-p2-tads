@@ -5,11 +5,14 @@ import um.edu.uy.tads.list.MyList;
 public class Language {
 
     private String languageId;
-
     private MyList<Movie> moviesLanguage;
 
     public Language(String languageId) {
         this.languageId = languageId;
+    }
+
+    public void addMovie(Movie movie) {
+        moviesLanguage.addLast(movie);
     }
 
     public MyList<Movie> getMoviesLanguage() {
