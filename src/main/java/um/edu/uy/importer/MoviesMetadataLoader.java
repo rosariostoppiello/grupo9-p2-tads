@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public class MoviesMetadataLoader {
 
-    @SuppressWarnings("unchecked")
     public static void loadMovies(String csvFilePath,
                                   HashTable<String, Movie> moviesById,
                                   HashTable<String, Collection> collectionsById,
@@ -30,14 +29,12 @@ public class MoviesMetadataLoader {
             while ((line = reader.readLine()) != null) {
                 try {
                     processMovieLine(line, moviesById, collectionsById, genresById, languagesByName);
-                } catch (Exception e) { // skip malformed lines
-                    continue;
+                } catch (Exception ignored) { // skip malformed lines
                 }
             }
 
         } catch (IOException e) {
-            System.err.println("Error loading movies metadata: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error loading movies metadata");
         }
     }
 
@@ -135,6 +132,7 @@ public class MoviesMetadataLoader {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static void addToGenre(String genreId, String genreName, Movie movie, HashTable<String, Genre> genresById) {
         Elemento<String, Genre> element = genresById.pertenece(genreId);
         Genre genre;

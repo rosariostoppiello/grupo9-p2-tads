@@ -76,8 +76,7 @@ public class RatingsLoader {
             }
 
         } catch (IOException e) {
-            System.err.println("Error cargando datos" + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error cargando datos");
         } finally {
             userMovieRatings = null;
             System.gc(); // suggest garbage collection
