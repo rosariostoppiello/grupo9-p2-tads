@@ -37,7 +37,7 @@ public class UMovie {
     }
 
     public void loadCredits() {
-        CreditsLoader.loadCredits("ratings_1mm.csv", actorsById, participantsById);
+        CreditsLoader.loadCredits("creditscsv", actorsById, participantsById);
     }
 
     // getters and setters

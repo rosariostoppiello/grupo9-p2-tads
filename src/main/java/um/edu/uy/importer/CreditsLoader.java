@@ -16,11 +16,10 @@ public class CreditsLoader {
     @SuppressWarnings("unchecked")
     public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById, HashTable<String, Participant> participantsById) {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-            reader.readLine(); // skip header
+            reader.readLine();
             String line;
 
             while ((line = reader.readLine()) != null) {
-                // Usar opencsv-style parsing para manejar comillas
                 String[] parts = parseCSVLine(line);
 
                 if (parts.length >= 3) {
@@ -32,18 +31,15 @@ public class CreditsLoader {
                     processCrew(crewData, movieId, participantsById);
                 }
             }
-
         } catch (IOException e) {
             System.err.println("Error cargando créditos: " + e.getMessage());
         }
     }
 
     private static String[] parseCSVLine(String line) {
-        // Simple CSV parsing que maneja comillas y tabs
         if (line.contains("\t")) {
             return line.split("\t", -1);
         } else {
-            // Si no hay tabs, intentar con comas (considerando comillas)
             return splitCSVWithQuotes(line);
         }
     }
@@ -98,7 +94,6 @@ public class CreditsLoader {
                         try {
                             actorsById.insertar(id, actor);
                         } catch (Exception e) {
-                            // ignore
                         }
                     } else {
                         actor = elemento.getValor();
@@ -151,7 +146,6 @@ public class CreditsLoader {
                         try {
                             participantsById.insertar(id, participant);
                         } catch (Exception e) {
-                            // ignore
                         }
                     } else {
                         participant = elemento.getValor();
