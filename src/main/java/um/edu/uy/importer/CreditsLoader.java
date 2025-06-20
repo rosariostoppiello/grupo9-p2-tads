@@ -17,12 +17,26 @@ public class CreditsLoader {
             reader.readLine();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] fields = line.split("\t");
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
                 if (fields.length >= 3) {
-                    processCast(fields[0], fields[2], actorsById);
-                    processCrew(fields[1], fields[2], participantsById);
+                    String movieId = fields [2].trim().replaceAll("\"", "");
+                    String castData = fields [0].trim().replaceAll("^\"|\"$", "");
+                    String crewData = fields [1].trim().replaceAll("^\"|\"$", "");
+
+                    processCast(castData, movieId, actorsById);
+                    processCrew(crewData, movieId, participantsById);
+
                 }
+
             }
+
+            boolean hayDatosActores = actorsById.pertenece("1") != null || actorsById.pertenece("2") != null;
+            boolean hayDatosParticipantes = participantsById.pertenece("1") != null || participantsById.pertenece("2") != null;
+
+            System.out.println("Verificación de carga: Actores (" + (hayDatosActores ? "SÍ" : "NO") +
+                    "), Participantes (" + (hayDatosParticipantes ? "SÍ" : "NO") + ")");
+
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
@@ -54,8 +68,14 @@ public class CreditsLoader {
                     actor = elemento.getValor();
                 }
 
+                String castId = extract(part, "\"cast_id\": ", ",", "}" );
+
                 String creditId = extract(part, "'credit_id': '", "'", null);
-                CastParticipation participation = new CastParticipation("", movieId, creditId != null ? creditId : "");
+                CastParticipation participation = new CastParticipation(
+                        castId != null ? castId : "",
+                        movieId,
+                        creditId != null ? creditId : "");
+
                 actor.addCastParticipation(participation);
             }
             i = end + 1;
@@ -71,14 +91,15 @@ public class CreditsLoader {
             if (end == -1) break;
 
             String part = crew.substring(i, end + 1);
-            String id = extract(part, "'id': ", ",", "}");
-            String name = extract(part, "'name': '", "'", null);
+            String id = extract(part, "\"id\": ", ",", "}");
+            String name = extract(part, "\"name\": \"", "\"", null);
 
             if (id != null && name != null) {
                 Elemento<String, Participant> elemento = participantsById.pertenece(id);
                 Participant participant;
                 if (elemento == null) {
-                    participant = new Participant(id, name, "");
+                    String creditId = extract(part, "\"credit_id\": \"", "\"", null);
+                    participant = new Participant(id, name, creditId != null ? creditId : "");
                     try {
                         participantsById.insertar(id, participant);
                     } catch (Exception e) {
@@ -87,7 +108,7 @@ public class CreditsLoader {
                     participant = elemento.getValor();
                 }
 
-                String job = extract(part, "'job': '", "'", null);
+                String job = extract(part, "\"job\": \"", "\"", null);
                 CrewParticipation participation = new CrewParticipation(job != null ? job : "");
                 participant.addCrewParticipation(participation);
             }
@@ -100,7 +121,7 @@ public class CreditsLoader {
         start += key.length();
         int end = end1 != null ? text.indexOf(end1, start) : -1;
         if (end == -1 && end2 != null) end = text.indexOf(end2, start);
-        if (end == -1) return null;
+        if (end == -1) return text.substring(start).trim();
         return text.substring(start, end).trim();
     }
 }

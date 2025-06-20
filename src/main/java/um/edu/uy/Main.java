@@ -28,7 +28,7 @@ public class Main {
             if (option == 1) {
                 uMovieSystem.loadMovies(); // movies y collections
                 uMovieSystem.loadRatings();
-                // Credits
+                uMovieSystem.loadCredits();
                 System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: ");
                 // falta poner tiempo de ejecución de la carga
             } else if (option == 2) {
