@@ -1,5 +1,6 @@
 package um.edu.uy.entities;
 
+import um.edu.uy.importer.CreditsLoader;
 import um.edu.uy.importer.MoviesMetadataLoader;
 import um.edu.uy.importer.RatingsLoader;
 
@@ -12,6 +13,8 @@ public class UMovie {
     private HashTable<String, Collection> collectionsById;
     private HashTable<String, Genre> genresById;
     private HashTable<String, Language> languagesByName;
+    private HashTable<String, Actor> actorsById;
+    private HashTable<String, Participant> participantsById;
 
     // constructor
     public UMovie() {
@@ -19,6 +22,9 @@ public class UMovie {
         this.collectionsById = new ClosedHashTableImpl<>(1699, 1);
         this.genresById = new ClosedHashTableImpl<>(37, 1);
         this.languagesByName = new ClosedHashTableImpl<>(71,1);
+
+        this.actorsById = new ClosedHashTableImpl<>(2000000, 1);
+        this.participantsById = new ClosedHashTableImpl<>(2000000, 1);
     }
 
     // load data
@@ -28,6 +34,10 @@ public class UMovie {
 
     public void loadRatings() {
         RatingsLoader.loadRatings("ratings_1mm.csv", moviesById);
+    }
+
+    public void loadCredits() {
+        CreditsLoader.loadCredits("ratings_1mm.csv", actorsById, participantsById);
     }
 
     // getters and setters
@@ -61,5 +71,21 @@ public class UMovie {
 
     public void setLanguagesByName(HashTable<String, Language> languagesByName) {
         this.languagesByName = languagesByName;
+    }
+
+    public HashTable<String, Actor> getActorsById() {
+        return actorsById;
+    }
+
+    public void setActorsById(HashTable<String, Actor> actorsById) {
+        this.actorsById = actorsById;
+    }
+
+    public HashTable<String, Participant> getParticipantsById() {
+        return participantsById;
+    }
+
+    public void setParticipantsById(HashTable<String, Participant> participantsById) {
+        this.participantsById = participantsById;
     }
 }

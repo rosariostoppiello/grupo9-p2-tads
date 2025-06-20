@@ -30,8 +30,10 @@ public class Main {
                 System.out.println("Cargando datos...");
                 uMovieSystem.loadMovies(); // movies, collections, languages, genres
                 uMovieSystem.loadRatings();
-                // uMovieSystem.loadCredits();
-                System.out.println(uMovieSystem.getMoviesById().elementos());
+                uMovieSystem.loadCredits();
+
+                System.out.println(uMovieSystem.getParticipantsById().elementos()); // está dando 0
+                System.out.println(uMovieSystem.getActorsById().elementos()); // está dando 0
 
                 long endTime = System.currentTimeMillis();
                 System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + (endTime-startTime) + " ms");

@@ -12,7 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 public class CreditsLoader {
 
-    public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById, HashTable<String, Participant> participantsById) {
+    public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById,
+                                   HashTable<String, Participant> participantsById) {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
             reader.readLine();
             String line;
