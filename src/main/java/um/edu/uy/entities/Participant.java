@@ -5,7 +5,7 @@ import um.edu.uy.importer.CreditsLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Participant extends Person {
+public class Participant extends Person implements Comparable<Participant> {
     private List<CrewParticipation> crewActivity;
 
     public Participant() {
@@ -30,4 +30,8 @@ public class Participant extends Person {
         this.crewActivity.add(participation);
     }
 
+    @Override
+    public int compareTo(Participant o) {
+        return this.personId.compareTo(o.personId);
+    }
 }

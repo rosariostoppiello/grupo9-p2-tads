@@ -2,7 +2,7 @@ package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
 
-public class Genre {
+public class Genre implements Comparable<Genre> {
 
     private String genreId;
     private String genreName;
@@ -32,5 +32,10 @@ public class Genre {
 
     public void setGenreName(String genreName) {
         this.genreName = genreName;
+    }
+
+    @Override
+    public int compareTo(Genre o) {
+        return this.genreId.compareTo(o.genreId);
     }
 }
