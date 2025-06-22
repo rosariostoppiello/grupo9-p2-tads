@@ -48,18 +48,31 @@ public class MoviesMetadataLoader {
         if (fields.length < 19) return;
 
         try {
+            String movieId = fields[5].trim();
+            String title = fields[18].trim();
+            String originalLanguage = fields[7].trim();
+            String revenue = fields[13].trim();
             String belongsToCollectionStr = fields[1].trim();
             String genresStr = fields[3].trim();
 
+            if (movieId.isEmpty() || title.isEmpty()) {
+                return;
+            }
+
             String collectionId = extractId(belongsToCollectionStr);
-            Movie movie = new Movie(fields[5].trim(), fields[18].trim(), fields[7].trim(),fields[13].trim(),collectionId);
-            if (collectionId != null) { // if the movie is part of a collection
+            Movie movie = new Movie(movieId, title, originalLanguage, revenue, collectionId);
+            if (collectionId != null && !collectionId.isEmpty()) { // if the movie is part of a collection
                 addToCollection(collectionId, belongsToCollectionStr, movie, collectionsById);
             }
 
             addToGenres(genresStr, movie, genresById);
-            addToLanguage(fields[7].trim(), movie, languagesByName);
-            moviesById.insertar(fields[5].trim(), movie);
+
+            if (!originalLanguage.isEmpty()) {
+                addToLanguage(originalLanguage, movie, languagesByName);
+            }
+            if (moviesById.pertenece(movieId) == null) {
+                moviesById.insertar(movieId, movie);
+            }
 
         } catch (Exception e) {
             // skip movie
@@ -67,6 +80,9 @@ public class MoviesMetadataLoader {
     }
 
     private static String[] splitCSV(String line) {
+        if (!line.contains("\"")) {
+            return line.split(",", -1);
+        }
         return line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
     }
 
@@ -95,7 +111,7 @@ public class MoviesMetadataLoader {
         if (start == -1) return "Unknown";
 
         start += 9;
-        int end = jsonStr.indexOf("", start);
+        int end = jsonStr.indexOf("'", start);
         return end != -1 ? jsonStr.substring(start, end) : "Unknown";
     }
 

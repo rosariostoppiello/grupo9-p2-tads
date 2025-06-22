@@ -65,26 +65,41 @@ public class Main {
                     long queryStart, queryEnd;
 
                     switch (option) {
-                        case 1:
+                        case 1: // Top 5 de las películas que más calificaciones por idioma
                             queryStart = System.currentTimeMillis();
-                            // Top 5 de las películas que más calificaciones por idioma
+                            uMovieSystem.query(1);
                             queryEnd = System.currentTimeMillis();
-                            System.out.println("Tiempo de ejecución de la consulta 1: " + (queryEnd - queryStart) + " ms");
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
-                        case 2:
-                            // Top 10 de las películas que mejor calificación media tienen por parte de los usuarios
+                        case 2: // Top 10 de las películas que mejor calificación media tienen por parte de los usuarios
+                            queryStart = System.currentTimeMillis();
+                            uMovieSystem.query(2);
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
-                        case 3:
-                            // Top 5 de las colecciones que más ingresos generaron
+                        case 3: // Top 5 de las colecciones que más ingresos generaron
+                            queryStart = System.currentTimeMillis();
+                            uMovieSystem.query(3);
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
-                        case 4:
-                            // Top 10 de los directores que mejor calificación tienen
+                        case 4: // Top 10 de los directores que mejor calificación tienen
+                            queryStart = System.currentTimeMillis();
+                            uMovieSystem.query(4);
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
-                        case 5:
-                            // Actor con más calificaciones recibidas en cada mes del año
+                        case 5: // Actor con más calificaciones recibidas en cada mes del año
+                            queryStart = System.currentTimeMillis();
+                            uMovieSystem.query(5);
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
-                        case 6:
-                            // Usuarios con más calificaciones por género
+                        case 6: // Usuarios con más calificaciones por género
+                            queryStart = System.currentTimeMillis();
+                            uMovieSystem.query(6);
+                            queryEnd = System.currentTimeMillis();
+                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 7:
                             System.out.println("Gracias por su(s) consulta(s)!");
