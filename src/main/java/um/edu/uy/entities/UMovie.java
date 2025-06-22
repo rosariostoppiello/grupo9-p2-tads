@@ -4,6 +4,7 @@ import um.edu.uy.importer.CreditsLoader;
 import um.edu.uy.importer.MoviesMetadataLoader;
 import um.edu.uy.importer.RatingsLoader;
 
+import um.edu.uy.queries.*;
 import um.edu.uy.tads.hash.ClosedHashTableImpl;
 import um.edu.uy.tads.hash.HashTable;
 
@@ -14,7 +15,9 @@ public class UMovie {
     private HashTable<String, Genre> genresById;
     private HashTable<String, Language> languagesByName;
     private HashTable<String, Actor> actorsById;
+
     private HashTable<String, Participant> participantsById;
+    private HashTable<String, Director> directorsById;
 
     // constructor
     public UMovie() {
@@ -23,8 +26,10 @@ public class UMovie {
         this.genresById = new ClosedHashTableImpl<>(37, 1);
         this.languagesByName = new ClosedHashTableImpl<>(71,1);
 
-        this.actorsById = new ClosedHashTableImpl<>(2000000, 1);
+        this.actorsById = new ClosedHashTableImpl<>(500000, 1);
+
         this.participantsById = new ClosedHashTableImpl<>(2000000, 1);
+        this.directorsById = new ClosedHashTableImpl<>(50000, 1);
     }
 
     // load data
@@ -38,6 +43,30 @@ public class UMovie {
 
     public void loadCredits() {
         CreditsLoader.loadCredits("credits.csv", actorsById, participantsById);
+    }
+
+    // queries
+    public void query(int num) {
+        switch (num) {
+            case 1:
+                Query1 query1 = new Query1();
+                query1.queryTop5MoviesByLanguage(moviesById);
+            case 2:
+                Query2 query2 = new Query2();
+                query2.queryTop10MoviesByRating(moviesById);
+            case 3:
+                Query3 query3 = new Query3();
+                query3.queryTop5CollectionsByRevenue(moviesById, collectionsById);
+            case 4:
+                Query4 query4 = new Query4();
+                query4.queryTop10DirectorsByRating(moviesById, directorsById);
+            case 5:
+                Query5 query5 = new Query5();
+                query5.queryActorWithMostRatingsEveryMonth(moviesById, actorsById);
+            case 6:
+                Query6 query6 = new Query6();
+                query6.queryUsersWithMostRatingsByGenre(moviesById);
+        }
     }
 
     // getters and setters
