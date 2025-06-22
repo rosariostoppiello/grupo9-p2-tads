@@ -1,16 +1,16 @@
 package um.edu.uy.tads.hash;
 
 import um.edu.uy.tads.exceptions.ElementoYaExistenteException;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 // hashing de dispersión abierta --> tanto lineal como cuadrática
-public class ClosedHashTableImpl<K extends Comparable<K>, T> implements HashTable<K, T> {
+public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T>> implements HashTable<K, T> {
 
     private Elemento<K, T>[] tabla;
     private int totalSize;
     private int elementos;
     private final int tipoResolucion; // 0 - lineal y 1 - cuadrática
     private final Elemento<K, T> elementoBorrado; // tombstone !!
-    // del libro: "The tombstone indicates that a record once occupied the slot but does so no longer."
 
     public int elementos() {
         return elementos;
@@ -167,5 +167,17 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T> implements HashTabl
             // esto pensé en hacerlo con otro procedimiento que iba calculando los números primos pero es mucho
             // más costoso a efectos de este práctico prefiero utilizar una lista, pues no hay tantos números
             // primos a este nivel de cantidades relativamente bajas (llega hasta 1610612741).
+    }
+
+    @Override
+    public MyLinkedListImpl<T> allValues() {
+        MyLinkedListImpl<T> valores = new MyLinkedListImpl<>();
+
+        for (int i = 0; i < totalSize; i++) {
+            if (tabla[i] != null && tabla[i] != elementoBorrado) {
+                valores.addLast(tabla[i].getValor());
+            }
+        }
+        return valores;
     }
 }

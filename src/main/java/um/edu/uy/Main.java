@@ -66,16 +66,10 @@ public class Main {
 
                     switch (option) {
                         case 1: // Top 5 de las películas que más calificaciones por idioma
-                            queryStart = System.currentTimeMillis();
                             uMovieSystem.query(1);
-                            queryEnd = System.currentTimeMillis();
-                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 2: // Top 10 de las películas que mejor calificación media tienen por parte de los usuarios
-                            queryStart = System.currentTimeMillis();
                             uMovieSystem.query(2);
-                            queryEnd = System.currentTimeMillis();
-                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 3: // Top 5 de las colecciones que más ingresos generaron
                             queryStart = System.currentTimeMillis();

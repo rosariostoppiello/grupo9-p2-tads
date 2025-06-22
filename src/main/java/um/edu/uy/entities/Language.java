@@ -2,7 +2,7 @@ package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
 
-public class Language {
+public class Language implements Comparable<Language> {
 
     private String languageId;
     private MyList<Movie> moviesLanguage;
@@ -29,5 +29,10 @@ public class Language {
 
     public void setLanguageId(String languageId) {
         this.languageId = languageId;
+    }
+
+    @Override
+    public int compareTo(Language o) {
+        return this.languageId.compareTo(o.languageId);
     }
 }

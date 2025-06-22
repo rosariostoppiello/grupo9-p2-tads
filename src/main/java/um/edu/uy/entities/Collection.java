@@ -2,7 +2,7 @@ package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
 
-public class Collection {
+public class Collection implements Comparable<Collection> {
 
     private String collectionId;
 
@@ -42,5 +42,10 @@ public class Collection {
 
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
+    }
+
+    @Override
+    public int compareTo(Collection o) {
+        return this.collectionId.compareTo(o.collectionId);
     }
 }

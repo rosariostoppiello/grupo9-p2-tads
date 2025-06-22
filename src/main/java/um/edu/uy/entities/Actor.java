@@ -2,7 +2,7 @@ package um.edu.uy.entities;
 
 import java.util.List;
 import java.util.ArrayList;
-public class Actor extends Person {
+public class Actor extends Person implements Comparable<Actor> {
     private List<CastParticipation> activityActor;
 
     public Actor () {
@@ -27,4 +27,8 @@ public class Actor extends Person {
         this.activityActor.add(participation);
     }
 
+    @Override
+    public int compareTo(Actor o) {
+        return this.personId.compareTo(o.personId);
+    }
 }
