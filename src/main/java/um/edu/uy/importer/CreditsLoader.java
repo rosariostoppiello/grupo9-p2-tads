@@ -1,9 +1,8 @@
 package um.edu.uy.importer;
 
 import um.edu.uy.entities.Actor;
+import um.edu.uy.entities.Director;
 import um.edu.uy.entities.Participant;
-import um.edu.uy.entities.CastParticipation;
-import um.edu.uy.entities.CrewParticipation;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.hash.Elemento;
 
@@ -14,13 +13,13 @@ import java.io.IOException;
 public class CreditsLoader {
 
     @SuppressWarnings("unchecked")
-    public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById, HashTable<String, Participant> participantsById) {
+    public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById,
+                                   HashTable<String, Participant> participantsById,
+                                   HashTable<String, Director> directorsById) {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-            reader.readLine(); // skip header
+            reader.readLine();
             String line;
-
             while ((line = reader.readLine()) != null) {
-                // Usar opencsv-style parsing para manejar comillas
                 String[] parts = parseCSVLine(line);
 
                 if (parts.length >= 3) {
@@ -29,7 +28,7 @@ public class CreditsLoader {
                     String movieId = parts[2];
 
                     processCast(castData, movieId, actorsById);
-                    processCrew(crewData, movieId, participantsById);
+                    processCrew(crewData, movieId, participantsById, directorsById);
                 }
             }
 
@@ -39,11 +38,10 @@ public class CreditsLoader {
     }
 
     private static String[] parseCSVLine(String line) {
-        // Simple CSV parsing que maneja comillas y tabs
         if (line.contains("\t")) {
             return line.split("\t", -1);
         } else {
-            // Si no hay tabs, intentar con comas (considerando comillas)
+
             return splitCSVWithQuotes(line);
         }
     }
@@ -103,9 +101,6 @@ public class CreditsLoader {
                     } else {
                         actor = elemento.getValor();
                     }
-
-                    CastParticipation participation = new CastParticipation("", movieId, "");
-                    actor.addCastParticipation(participation);
                 }
             }
 
@@ -114,7 +109,9 @@ public class CreditsLoader {
     }
 
     @SuppressWarnings("unchecked")
-    private static void processCrew(String crew, String movieId, HashTable<String, Participant> participantsById) {
+    private static void processCrew(String crew, String movieId,
+                                    HashTable<String, Participant> participantsById,
+                                    HashTable<String, Director> directorsById) {
         if (crew == null || crew.equals("[]") || crew.trim().isEmpty()) return;
 
         int i = 0;
@@ -152,14 +149,25 @@ public class CreditsLoader {
                             try {
                                 participantsById.insertar(id, participant);
                             } catch (Exception e) {
-                                // ignore
                             }
                         } else {
                             participant = elemento.getValor();
                         }
 
-                        CrewParticipation participation = new CrewParticipation(job);
-                        participant.addCrewParticipation(participation);
+                        Elemento<String, Director> directorElement = directorsById.pertenece(id);
+                        Director director;
+
+                        if (directorElement == null) {
+                            director = new Director(id, name, "");
+                            try {
+                                directorsById.insertar(id, director);
+                            } catch (Exception e) {
+                            }
+                        } else {
+                            director = directorElement.getValor();
+                        }
+
+                        director.addMovieId(movieId);
                     }
                 }
             }

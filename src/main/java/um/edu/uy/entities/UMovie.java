@@ -42,7 +42,7 @@ public class UMovie {
     }
 
     public void loadCredits() {
-        CreditsLoader.loadCredits("credits.csv", actorsById, participantsById);
+        CreditsLoader.loadCredits("credits.csv", actorsById, participantsById, directorsById);
     }
 
     // queries
@@ -51,21 +51,27 @@ public class UMovie {
             case 1:
                 Query1 query1 = new Query1();
                 query1.queryTop5MoviesByLanguage(moviesById);
+                break;
             case 2:
                 Query2 query2 = new Query2();
                 query2.queryTop10MoviesByRating(moviesById);
+                break;
             case 3:
                 Query3 query3 = new Query3();
                 query3.queryTop5CollectionsByRevenue(moviesById, collectionsById);
+                break;
             case 4:
                 Query4 query4 = new Query4();
                 query4.queryTop10DirectorsByRating(moviesById, directorsById);
+                break;
             case 5:
                 Query5 query5 = new Query5();
                 query5.queryActorWithMostRatingsEveryMonth(moviesById, actorsById);
+                break;
             case 6:
                 Query6 query6 = new Query6();
                 query6.queryUsersWithMostRatingsByGenre(moviesById);
+                break;
         }
     }
 
@@ -116,5 +122,13 @@ public class UMovie {
 
     public void setParticipantsById(HashTable<String, Participant> participantsById) {
         this.participantsById = participantsById;
+    }
+
+    public HashTable<String, Director> getDirectorsById() {
+        return directorsById;
+    }
+
+    public void setDirectorsById(HashTable<String, Director> directorsById) {
+        this.directorsById = directorsById;
     }
 }
