@@ -51,8 +51,7 @@ public class MyLinkedListImpl<T extends Comparable<T>> implements MyList<T>, MyQ
                 nodoActual = nodoActual.getNext();
             }
             return nodoActual.getValor();
-        }
-        else return null;
+        } else return null;
     }
         
     @Override

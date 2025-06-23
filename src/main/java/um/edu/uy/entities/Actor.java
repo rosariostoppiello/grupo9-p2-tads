@@ -1,34 +1,33 @@
 package um.edu.uy.entities;
 
-import java.util.List;
-import java.util.ArrayList;
+import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
+
+
 public class Actor extends Person implements Comparable<Actor> {
-    private List<CastParticipation> activityActor;
+    private MyList<String> activityActor;
 
-    public Actor () {
-        super();
-        this.activityActor = new ArrayList<>();
+    public Actor(String personId, String name) {
+        super(personId, name);
+        this.activityActor = new MyLinkedListImpl<>();
     }
 
-    public Actor(String personId, String name, String creditId) {
-        super(personId, name, creditId);
-        this.activityActor = new ArrayList<>();
-    }
-
-    public List<CastParticipation> getActivityActor() {
-        return activityActor;
-    }
-
-    public void setActivityActor(List<CastParticipation> activityActor) {
-        this.activityActor = activityActor;
-    }
-
-    public void addCastParticipation(CastParticipation participation) {
-        this.activityActor.add(participation);
+    public void addMovieId(String movieId) {
+        if (movieId != null && !activityActor.elementoSeEncuentra(movieId)) {
+            activityActor.addLast(movieId);
+        }
     }
 
     @Override
     public int compareTo(Actor o) {
         return this.personId.compareTo(o.personId);
+    }
+
+    public MyList<String> getActivityActor() {
+        return activityActor;
+    }
+
+    public void setActivityActor(MyList<String> activityActor) {
+        this.activityActor = activityActor;
     }
 }

@@ -2,7 +2,6 @@ package um.edu.uy.importer;
 
 import um.edu.uy.entities.Actor;
 import um.edu.uy.entities.Director;
-import um.edu.uy.entities.Participant;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.hash.Elemento;
 
@@ -14,7 +13,6 @@ public class CreditsLoader {
 
     @SuppressWarnings("unchecked")
     public static void loadCredits(String csvFilePath, HashTable<String, Actor> actorsById,
-                                   HashTable<String, Participant> participantsById,
                                    HashTable<String, Director> directorsById) {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
             reader.readLine();
@@ -28,7 +26,7 @@ public class CreditsLoader {
                     String movieId = parts[2];
 
                     processCast(castData, movieId, actorsById);
-                    processCrew(crewData, movieId, participantsById, directorsById);
+                    processCrew(crewData, movieId, directorsById);
                 }
             }
 
@@ -92,7 +90,7 @@ public class CreditsLoader {
                     Actor actor;
 
                     if (elemento == null) {
-                        actor = new Actor(id, name, "");
+                        actor = new Actor(id, name);
                         try {
                             actorsById.insertar(id, actor);
                         } catch (Exception e) {
@@ -101,6 +99,7 @@ public class CreditsLoader {
                     } else {
                         actor = elemento.getValor();
                     }
+                    actor.addMovieId(movieId);
                 }
             }
 
@@ -110,7 +109,6 @@ public class CreditsLoader {
 
     @SuppressWarnings("unchecked")
     private static void processCrew(String crew, String movieId,
-                                    HashTable<String, Participant> participantsById,
                                     HashTable<String, Director> directorsById) {
         if (crew == null || crew.equals("[]") || crew.trim().isEmpty()) return;
 
@@ -141,24 +139,11 @@ public class CreditsLoader {
                     }
 
                     if (job.equals("Director")) {
-                        Elemento<String, Participant> elemento = participantsById.pertenece(id);
-                        Participant participant;
-
-                        if (elemento == null) {
-                            participant = new Participant(id, name, "");
-                            try {
-                                participantsById.insertar(id, participant);
-                            } catch (Exception e) {
-                            }
-                        } else {
-                            participant = elemento.getValor();
-                        }
-
                         Elemento<String, Director> directorElement = directorsById.pertenece(id);
                         Director director;
 
                         if (directorElement == null) {
-                            director = new Director(id, name, "");
+                            director = new Director(id, name);
                             try {
                                 directorsById.insertar(id, director);
                             } catch (Exception e) {

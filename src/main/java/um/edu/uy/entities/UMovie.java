@@ -14,9 +14,8 @@ public class UMovie {
     private HashTable<String, Collection> collectionsById;
     private HashTable<String, Genre> genresById;
     private HashTable<String, Language> languagesByName;
-    private HashTable<String, Actor> actorsById;
 
-    private HashTable<String, Participant> participantsById;
+    private HashTable<String, Actor> actorsById;
     private HashTable<String, Director> directorsById;
 
     // constructor
@@ -27,8 +26,6 @@ public class UMovie {
         this.languagesByName = new ClosedHashTableImpl<>(71,1);
 
         this.actorsById = new ClosedHashTableImpl<>(500000, 1);
-
-        this.participantsById = new ClosedHashTableImpl<>(2000000, 1);
         this.directorsById = new ClosedHashTableImpl<>(50000, 1);
     }
 
@@ -42,7 +39,7 @@ public class UMovie {
     }
 
     public void loadCredits() {
-        CreditsLoader.loadCredits("credits.csv", actorsById, participantsById, directorsById);
+        CreditsLoader.loadCredits("credits.csv", actorsById, directorsById);
     }
 
     // queries
@@ -116,11 +113,11 @@ public class UMovie {
         this.actorsById = actorsById;
     }
 
-    public HashTable<String, Participant> getParticipantsById() {
-        return participantsById;
+    public HashTable<String, Director> getDirectorsById() {
+        return directorsById;
     }
 
-    public void setParticipantsById(HashTable<String, Participant> participantsById) {
-        this.participantsById = participantsById;
+    public void setDirectorsById(HashTable<String, Director> directorsById) {
+        this.directorsById = directorsById;
     }
 }

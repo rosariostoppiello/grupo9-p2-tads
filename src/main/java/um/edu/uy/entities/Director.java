@@ -1,31 +1,33 @@
 package um.edu.uy.entities;
 
-import java.util.LinkedList;
+import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class Director extends Person implements Comparable<Director> {
 
-    private LinkedList<String> movieIds;
+    private MyList<String> movieIds;
 
-    public Director(String personId, String name, String creditId) {
-        super(personId, name, creditId);
-        this.movieIds = new LinkedList<>();
+    public Director(String personId, String name) {
+        super(personId, name);
+        this.movieIds = new MyLinkedListImpl<>();
     }
+
     public void addMovieId(String movieId) {
-        if (movieId != null && !movieIds.contains(movieId)) {
-            movieIds.add(movieId);
+        if (movieId != null && !movieIds.elementoSeEncuentra(movieId)) {
+            movieIds.addLast(movieId);
         }
     }
 
-    public LinkedList<String> getMovieIds() {
+    public MyList<String> getMovieIds() {
         return movieIds;
     }
 
-    public void setMovieIds(LinkedList<String> movieIds) {
+    public void setMovieIds(MyList<String> movieIds) {
         this.movieIds = movieIds;
     }
 
     public int getMovieCount() {
-        return movieIds.size();
+        return movieIds.largo();
     }
 
     @Override
