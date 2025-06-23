@@ -90,10 +90,7 @@ public class Main {
                             System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 6: // Usuarios con más calificaciones por género
-                            queryStart = System.currentTimeMillis();
                             uMovieSystem.query(6);
-                            queryEnd = System.currentTimeMillis();
-                            System.out.println("Tiempo de ejecución de la consulta: " + (queryEnd - queryStart) + " ms");
                             break;
                         case 7:
                             System.out.println("Gracias por su(s) consulta(s)!");

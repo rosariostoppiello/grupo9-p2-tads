@@ -14,6 +14,16 @@ public class Genre implements Comparable<Genre> {
         this.moviesGenre = moviesGenre;
     }
 
+    public int getTotalRatingsCount() {
+        int totalRatings = 0;
+        Movie movie;
+        for (int i = 0; i < moviesGenre.largo(); i++) {
+            movie = moviesGenre.obtener(i);
+            totalRatings += movie.getRatings().largo();
+        }
+        return totalRatings;
+    }
+
     public void addMovieToGenre(Movie movie) {
         moviesGenre.addLast(movie);
     }
@@ -34,8 +44,17 @@ public class Genre implements Comparable<Genre> {
         this.genreName = genreName;
     }
 
+    public MyList<Movie> getMoviesGenre() {
+        return moviesGenre;
+    }
+
+    public void setMoviesGenre(MyList<Movie> moviesGenre) {
+        this.moviesGenre = moviesGenre;
+    }
+
     @Override
     public int compareTo(Genre o) {
         return this.genreId.compareTo(o.genreId);
     }
+
 }
