@@ -7,9 +7,6 @@ import um.edu.uy.entities.Movie;
 import um.edu.uy.tads.hash.Elemento;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class MoviesMetadataLoader {
 
@@ -19,24 +16,9 @@ public class MoviesMetadataLoader {
                                   HashTable<String, Genre> genresById,
                                   HashTable<String, Language> languagesByName) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-
-            reader.readLine();
-            String line;
-
-            int counter = 0;
-            while ((line = reader.readLine()) != null) {
-                try {
-                    counter++;
-                    processMovieLine(line, moviesById, collectionsById, genresById, languagesByName);
-                } catch (Exception ignored) { // skip malformed lines
-                }
-            }
-            System.out.print(counter);
-
-        } catch (IOException e) {
-            System.err.println("Error loading movies metadata");
-        }
+        CSVParser.parseCSV(csvFilePath, line -> {
+            processMovieLine(line, moviesById, collectionsById, genresById, languagesByName);
+        });
     }
 
     private static void processMovieLine(String line,
@@ -44,7 +26,7 @@ public class MoviesMetadataLoader {
                                          HashTable<String, Collection> collectionsById,
                                          HashTable<String, Genre> genresById,
                                          HashTable<String, Language> languagesByName) {
-        String[] fields = splitCSV(line);
+        String[] fields = CSVParser.splitCSV(line);
 
         if (fields.length < 19) { return; }
 
@@ -76,16 +58,8 @@ public class MoviesMetadataLoader {
             if (!originalLanguage.isEmpty()) {
                 addToLanguage(originalLanguage, movie, languagesByName);
             }
-        } catch (Exception e) {
-            // skip movie
+        } catch (Exception e) { // skip movie
         }
-    }
-
-    private static String[] splitCSV(String line) {
-        if (!line.contains("\"")) {
-            return line.split(",", -1);
-        }
-        return line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
     }
 
     private static String extractId(String jsonStr) {
@@ -96,7 +70,7 @@ public class MoviesMetadataLoader {
         int start = jsonStr.indexOf("'id':");
         if (start == -1) return null;
 
-        start += 6;
+        start += 5;
         int end = jsonStr.indexOf(",", start);
         if (end == -1) end = jsonStr.indexOf("}", start);
         if (end == -1) return null;

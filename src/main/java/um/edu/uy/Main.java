@@ -29,16 +29,15 @@ public class Main {
                 System.out.println("Cargando datos...");
                 uMovieSystem.loadMovies(); // movies, collections, languages, genres
                 uMovieSystem.loadRatings();
-                uMovieSystem.loadCredits();
+                // uMovieSystem.loadCredits();
 
-                System.out.println(uMovieSystem.getGenresById().elementos()); // 20
-                System.out.println(uMovieSystem.getLanguagesByName().elementos()); // 89
-                System.out.println(uMovieSystem.getCollectionsById().elementos()); // yo: 42567 - 42589
-                System.out.println(uMovieSystem.getMoviesById().elementos()); // yo: 45362 - 45433
+                System.out.println(uMovieSystem.getGenresById().elementos());
+                System.out.println(uMovieSystem.getLanguagesByName().elementos());
+                System.out.println(uMovieSystem.getCollectionsById().elementos());
+                System.out.println(uMovieSystem.getMoviesById().elementos());
 
-                System.out.println(uMovieSystem.getDirectorsById().elementos()); // 19741 - yo: 161444
+                System.out.println(uMovieSystem.getDirectorsById().elementos()); // 19741 - yo: 19867
                 System.out.println(uMovieSystem.getActorsById().elementos()); // 200979 - yo: 206049
-                // 218034 total
                 // ratings 1 000 000
 
                 long endTime = System.currentTimeMillis();
