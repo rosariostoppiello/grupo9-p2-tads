@@ -31,13 +31,13 @@ public class Main {
                 uMovieSystem.loadRatings();
                 uMovieSystem.loadCredits();
 
-                System.out.println(uMovieSystem.getGenresById().elementos()); // 20 - yo: 32 - 20
-                System.out.println(uMovieSystem.getLanguagesByName().elementos()); // 89 - yo: 92 - 89
-                System.out.println(uMovieSystem.getCollectionsById().elementos()); // 1644 - yo: 1695 - 42589
-                System.out.println(uMovieSystem.getMoviesById().elementos()); // 45433 - yo: 45362 - 45433
+                System.out.println(uMovieSystem.getGenresById().elementos()); // 20
+                System.out.println(uMovieSystem.getLanguagesByName().elementos()); // 89
+                System.out.println(uMovieSystem.getCollectionsById().elementos()); // yo: 42567 - 42589
+                System.out.println(uMovieSystem.getMoviesById().elementos()); // yo: 45362 - 45433
 
-                System.out.println(uMovieSystem.getParticipantsById().elementos()); // 19741 - yo: 161444 -
-                System.out.println(uMovieSystem.getActorsById().elementos()); // 200979 - yo: 206049 -
+                System.out.println(uMovieSystem.getParticipantsById().elementos()); // 19741 - yo: 161444
+                System.out.println(uMovieSystem.getActorsById().elementos()); // 200979 - yo: 206049
                 // 218034 total
                 // ratings 1 000 000
 

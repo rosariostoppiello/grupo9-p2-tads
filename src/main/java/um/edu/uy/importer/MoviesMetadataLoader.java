@@ -64,7 +64,7 @@ public class MoviesMetadataLoader {
             if (collectionId != null && !collectionId.isEmpty()) { // if the movie is part of a collection
                 addToCollection(collectionId, belongsToCollectionStr, movie, collectionsById);
             } else {
-                addToCollection(collectionId, null, movie, collectionsById);
+                addToCollection(movieId, null, movie, collectionsById);
             }
 
             addToGenres(genresStr, movie, genresById);
