@@ -4,7 +4,8 @@ import um.edu.uy.entities.Actor;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.tads.hash.HashTable;
 
-public class Query5 {
+// query 5
+public class QueryActorWithMostRatingsEveryMonth {
     public void queryActorWithMostRatingsEveryMonth(HashTable<String, Movie> moviesById,
                                                     HashTable<String, Actor> actorsById) {
         // Es sabido que hay épocas en las que ciertas películas son más vistas que otras.

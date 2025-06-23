@@ -7,11 +7,10 @@ import um.edu.uy.entities.Rating;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.MyList;
 
-public class Query6 {
+// query 6
+public class QueryUsersWithMostRatingsByGenre {
 
     public void queryUsersWithMostRatingsByGenre(HashTable<String, Genre> genresById) {
-        long queryStart = System.currentTimeMillis();
-
         // find top 10 genres
         MyList<Genre> allGenres = genresById.allValues();
 
@@ -101,8 +100,5 @@ public class Query6 {
             }
         }
         top10Genres = null;
-
-        long queryEnd = System.currentTimeMillis();
-        System.out.println("Tiempo de ejecución de la consulta:" + (queryEnd-queryStart) + "ms");
     }
 }

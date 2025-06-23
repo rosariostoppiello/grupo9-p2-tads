@@ -4,8 +4,8 @@ import um.edu.uy.entities.Director;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.tads.hash.HashTable;
 
-public class Query4 {
-
+// query 4
+public class QueryTop10DirectorsByRating {
     public void queryTop10DirectorsByRating(HashTable<String, Movie> movies,
                                             HashTable<String, Director> directors) {
         // Una película tiene un director. En general, los directores tienen cierto renombre y sus

@@ -4,7 +4,8 @@ import um.edu.uy.entities.Movie;
 
 import um.edu.uy.tads.hash.HashTable;
 
-public class Query1 {
+// query 1
+public class QueryTop5MoviesByLanguage {
     public void queryTop5MoviesByLanguage(HashTable<String, Movie> movies) {
         // Tomando en cuenta las películas y las evaluaciones que los usuarios realizaron
         //sobre las mismas, indicar el Top 5 de las películas en idioma original Inglés, Francés,

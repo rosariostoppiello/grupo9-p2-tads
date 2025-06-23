@@ -4,7 +4,8 @@ import um.edu.uy.entities.Collection;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.tads.hash.HashTable;
 
-public class Query3 {
+// query 3
+public class QueryTop5CollectionsByRevenue {
     public void queryTop5CollectionsByRevenue(HashTable<String, Movie> movies,
                                               HashTable<String, Collection> collections) {
         // Una película puede pertenecer a una saga (o colección de películas). Agrupando las
