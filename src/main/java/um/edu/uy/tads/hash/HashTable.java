@@ -8,4 +8,5 @@ public interface HashTable<K extends Comparable<K>, T extends Comparable<T>> {
     public void borrar(K clave);
     public int elementos();
     public MyLinkedListImpl<T> allValues();
+    MyLinkedListImpl<K> allKeys();
 }

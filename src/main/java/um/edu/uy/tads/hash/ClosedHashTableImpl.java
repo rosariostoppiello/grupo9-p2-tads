@@ -180,4 +180,16 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T
         }
         return valores;
     }
+
+    @Override
+    public MyLinkedListImpl<K> allKeys() {
+        MyLinkedListImpl<K> claves = new MyLinkedListImpl<>();
+
+        for (int i = 0; i < totalSize; i++) {
+            if (tabla[i] != null && tabla[i] != elementoBorrado) {
+                claves.addLast(tabla[i].getClave());
+            }
+        }
+        return claves;
+    }
 }
