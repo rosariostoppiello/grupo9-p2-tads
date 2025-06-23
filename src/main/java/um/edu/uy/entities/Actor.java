@@ -3,7 +3,6 @@ package um.edu.uy.entities;
 import um.edu.uy.tads.list.MyList;
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
-
 public class Actor extends Person implements Comparable<Actor> {
     private MyList<String> activityActor;
 

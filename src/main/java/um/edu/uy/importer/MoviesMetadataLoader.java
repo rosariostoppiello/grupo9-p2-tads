@@ -4,11 +4,9 @@ import um.edu.uy.entities.Collection;
 import um.edu.uy.entities.Genre;
 import um.edu.uy.entities.Language;
 import um.edu.uy.entities.Movie;
-
 import um.edu.uy.tads.hash.Elemento;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,12 +24,15 @@ public class MoviesMetadataLoader {
             reader.readLine();
             String line;
 
+            int counter = 0;
             while ((line = reader.readLine()) != null) {
                 try {
+                    counter++;
                     processMovieLine(line, moviesById, collectionsById, genresById, languagesByName);
                 } catch (Exception ignored) { // skip malformed lines
                 }
             }
+            System.out.print(counter);
 
         } catch (IOException e) {
             System.err.println("Error loading movies metadata");
@@ -43,24 +44,28 @@ public class MoviesMetadataLoader {
                                          HashTable<String, Collection> collectionsById,
                                          HashTable<String, Genre> genresById,
                                          HashTable<String, Language> languagesByName) {
-
         String[] fields = splitCSV(line);
-        if (fields.length < 19) return;
+
+        if (fields.length < 19) { return; }
 
         try {
             String movieId = fields[5].trim();
-            String title = fields[18].trim();
+            String title = fields[8].trim();
             String originalLanguage = fields[7].trim();
             String revenue = fields[13].trim();
             String belongsToCollectionStr = fields[1].trim();
             String genresStr = fields[3].trim();
 
-            if (movieId.isEmpty() || title.isEmpty()) {
+            if (movieId.isEmpty() || !movieId.matches("\\d+")) { // skip if movieid is empty or not numeric
                 return;
             }
 
             String collectionId = extractId(belongsToCollectionStr);
             Movie movie = new Movie(movieId, title, originalLanguage, revenue, collectionId);
+            if (moviesById.pertenece(movieId) == null) {
+                moviesById.insertar(movieId, movie);
+            }
+
             if (collectionId != null && !collectionId.isEmpty()) { // if the movie is part of a collection
                 addToCollection(collectionId, belongsToCollectionStr, movie, collectionsById);
             } else {
@@ -68,14 +73,9 @@ public class MoviesMetadataLoader {
             }
 
             addToGenres(genresStr, movie, genresById);
-
             if (!originalLanguage.isEmpty()) {
                 addToLanguage(originalLanguage, movie, languagesByName);
             }
-            if (moviesById.pertenece(movieId) == null) {
-                moviesById.insertar(movieId, movie);
-            }
-
         } catch (Exception e) {
             // skip movie
         }
@@ -143,15 +143,21 @@ public class MoviesMetadataLoader {
             return;
         }
 
-        String[] parts = genresStr.split("\\{");
-        for (String part : parts) {
-            if (!part.contains("'id':")) continue;
+        int startIndex = 0;
+        while (true) {
+            int idStart = genresStr.indexOf("{'id':", startIndex);
+            if (idStart == -1) break;
+            int blockEnd = genresStr.indexOf("}", idStart);
+            if (blockEnd == -1) break;
 
-            String genreId = extractId("{" + part);
-            if (genreId != null) {
-                String genreName = extractName("{" + part);
+            String genreBlock = genresStr.substring(idStart, blockEnd + 1);
+            String genreId = extractId(genreBlock);
+            if (genreId != null && !genreId.trim().isEmpty()) {
+                String genreName = extractName(genreBlock);
                 addToGenre(genreId, genreName, movie, genresById);
             }
+
+            startIndex = blockEnd + 1;
         }
     }
 
@@ -171,10 +177,10 @@ public class MoviesMetadataLoader {
 
     @SuppressWarnings("unchecked")
     private static void addToLanguage(String languageCode, Movie movie, HashTable<String, Language> languagesByName) {
-        if (languageCode == null || languageCode.trim().isEmpty()) {
+        if (languageCode == null || languageCode.trim().isEmpty() || languageCode.equals("\\N")) {
             return;
         }
-
+        languageCode = languageCode.trim().toLowerCase();
         Elemento<String, Language> element = languagesByName.pertenece(languageCode);
         Language language;
 
@@ -190,5 +196,4 @@ public class MoviesMetadataLoader {
             language.addMovie(movie);
         }
     }
-
 }
