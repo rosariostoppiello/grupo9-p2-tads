@@ -70,7 +70,7 @@ public class UMovie {
                 break;
             case 6:
                 Query6 query6 = new Query6();
-                query6.queryUsersWithMostRatingsByGenre(moviesById);
+                query6.queryUsersWithMostRatingsByGenre(genresById);
                 break;
         }
     }
@@ -122,13 +122,5 @@ public class UMovie {
 
     public void setParticipantsById(HashTable<String, Participant> participantsById) {
         this.participantsById = participantsById;
-    }
-
-    public HashTable<String, Director> getDirectorsById() {
-        return directorsById;
-    }
-
-    public void setDirectorsById(HashTable<String, Director> directorsById) {
-        this.directorsById = directorsById;
     }
 }

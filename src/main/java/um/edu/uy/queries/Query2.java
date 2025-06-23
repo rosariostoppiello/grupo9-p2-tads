@@ -45,7 +45,7 @@ public class Query2 {
                     top10Movies[i].getTitle() + ", " +
                     top10Ratings[i]);
         }
-        System.out.println("Tiempo de ejecución de la consulta adentro!:" + (queryEnd-queryStart) + "ms");
+        System.out.println("Tiempo de ejecución de la consulta:" + (queryEnd-queryStart) + "ms");
     }
 
     private void insertTop10(Movie[] top10Movies, Double[] top10Ratings, int count, Movie movie, Double rating) {

@@ -63,6 +63,8 @@ public class MoviesMetadataLoader {
             Movie movie = new Movie(movieId, title, originalLanguage, revenue, collectionId);
             if (collectionId != null && !collectionId.isEmpty()) { // if the movie is part of a collection
                 addToCollection(collectionId, belongsToCollectionStr, movie, collectionsById);
+            } else {
+                addToCollection(collectionId, null, movie, collectionsById);
             }
 
             addToGenres(genresStr, movie, genresById);
@@ -122,7 +124,12 @@ public class MoviesMetadataLoader {
         Collection collection;
 
         if (element == null) {
-            String name = extractName(collectionStr);
+            String name;
+            if (collectionStr != null) {
+                name = extractName(collectionStr);
+            } else {
+                name = movie.getTitle();
+            }
             collection = new Collection(collectionId, name, new MyLinkedListImpl<>());
             collectionsById.insertar(collectionId, collection);
         } else {
