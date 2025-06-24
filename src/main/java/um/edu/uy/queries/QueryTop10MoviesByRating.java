@@ -1,72 +1,60 @@
 package um.edu.uy.queries;
 
-import um.edu.uy.algorithms.QuickSort2Arrays;
 import um.edu.uy.entities.Movie;
 
+import um.edu.uy.tads.hash.Elemento;
 import um.edu.uy.tads.hash.HashTable;
-import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.tree.heap.DatoHeap;
+import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
+import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
-// query 2
+// query 2 - 340 ms aprox.
 public class QueryTop10MoviesByRating {
 
     public void queryTop10MoviesByRating(HashTable<String, Movie> movies) {
-        MyList<Movie> allMovies = movies.allValues();
+        MyBinaryHeapTree<Double, Movie> top10Heap = new MyBinaryHeapTreeImpl<>(false, 11);
 
-        Movie[] top10Movies = new Movie[10];
-        Double[] top10Ratings = new Double[10];
-        int top10Count = 0;
+        // heap insertions
+        for (Elemento<String, Movie> elemento : movies) {
+            Movie movie = elemento.getValor();
 
-        Movie movie;
-        for (int i = 0; i < allMovies.largo(); i++) {
-            movie = allMovies.obtener(i);
             if (!movie.getRatings().isEmpty()) {
                 double sum = 0.0;
                 int ratingsCount = movie.getRatings().largo();
 
-                if (ratingsCount < 100) continue; // so movies with 1-3 ratings do not take the top
+                if (ratingsCount < 100) continue;
 
                 for (int j = 0; j < ratingsCount; j++) {
-                    sum += movie.getRatings().obtener(j).getRating();
+                    sum +=movie.getRatings().obtener(j).getRating();
                 }
-
                 Double actualMean = sum / ratingsCount;
 
-                insertTop10(top10Movies, top10Ratings, top10Count, movie, actualMean);
-                if (top10Count < 10) top10Count++;
+                if (top10Heap.tamanio() < 10) {
+                    top10Heap.agregar(actualMean, movie);
+                } else {
+                    DatoHeap<Double, Movie> minElement = top10Heap.eliminar();
+                    if (actualMean > minElement.getKey()) {
+                        top10Heap.agregar(actualMean, movie);
+                    } else {
+                        top10Heap.agregar(minElement.getKey(), minElement.getData());
+                    }
+                }
             }
         }
 
-        QuickSort2Arrays.quickSort(top10Movies, top10Ratings);
-
-        for (int i = 0; i < top10Count; i ++) {
-            System.out.println(top10Movies[i].getMovieId() + ", " +
-                    top10Movies[i].getTitle() + ", " +
-                    top10Ratings[i]);
-        }
-    }
-
-    private void insertTop10(Movie[] top10Movies, Double[] top10Ratings, int count, Movie movie, Double rating) {
-        if (count < 10) { // if there is less than 10 movies registered
-            top10Movies[count] = movie;
-            top10Ratings[count] = rating;
-            return;
+        // temporal array
+        DatoHeap<Double, Movie>[] tempArray = new DatoHeap[top10Heap.tamanio()];
+        int count = top10Heap.tamanio();
+        for (int i = 0; i < count; i++) {
+            tempArray[i] = top10Heap.eliminar();
         }
 
-        int worstIndex = 0;
-        Double worstRating = top10Ratings[0];
-
-        for (int i = 1; i < 10; i++) {
-            if (top10Ratings[i] < worstRating) {
-                worstRating = top10Ratings[i];
-                worstIndex = i;
-            }
-        }
-
-        if (rating > worstRating) {
-            top10Movies[worstIndex] = movie;
-            top10Ratings[worstIndex] = rating;
+        // print in reverse order
+        for (int i = count - 1; i >= 0; i--) {
+            System.out.println(tempArray[i].getData().getMovieId() + ", " +
+                    tempArray[i].getData().getTitle() + " " +
+                    tempArray[i].getKey());
         }
 
     }
-
 }

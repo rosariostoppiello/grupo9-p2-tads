@@ -1,6 +1,5 @@
 package um.edu.uy.queries;
 
-import um.edu.uy.algorithms.QuickSort2Arrays;
 import um.edu.uy.entities.Genre;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.entities.Rating;
@@ -18,52 +17,56 @@ public class QueryUsersWithMostRatingsByGenre {
 
     public void queryUsersWithMostRatingsByGenre(HashTable<String, Genre> genresById) {
         // find top 10 genres
-        MyList<Genre> allGenres = genresById.allValues();
-        int totalGenres = allGenres.largo();
+        MyBinaryHeapTree<Integer, Genre> top10GenresHeap = new MyBinaryHeapTreeImpl<>(false, 11);
 
-        Genre[] genreArray = new Genre[totalGenres];
-        Integer[] countArray = new Integer[totalGenres];
+        for (Elemento<String, Genre> element : genresById) {
+            Genre genre = element.getValor();
+            Integer totalRatings = genre.getTotalRatingsCount();
 
-        for (int i = 0; i < totalGenres; i++) {
-            genreArray[i] = allGenres.obtener(i);
-            countArray[i] = genreArray[i].getTotalRatingsCount();
+            if (top10GenresHeap.tamanio() < 10) {
+                top10GenresHeap.agregar(totalRatings, genre);
+            } else {
+                DatoHeap<Integer, Genre> minElement = top10GenresHeap.eliminar();
+                if (totalRatings > minElement.getKey()) {
+                    top10GenresHeap.agregar(totalRatings, genre);
+                } else {
+                    top10GenresHeap.agregar(minElement.getKey(), minElement.getData());
+                }
+            }
         }
 
-        QuickSort2Arrays.quickSort(genreArray, countArray);
-        int top10Size = Math.min(10, totalGenres);
+        DatoHeap<Integer, Genre>[] top10Array = new DatoHeap[top10GenresHeap.tamanio()];
+        int count = top10GenresHeap.tamanio();
 
-        for (int g = 0; g < top10Size; g++) {
-            Genre genre = genreArray[g];
+        for (int i = 0; i < count; i++) {
+            top10Array[i] = top10GenresHeap.eliminar();
+        }
+
+        for (int i = count - 1; i >= 0; i--) {
+            Genre genre = top10Array[i].getData();
             if (genre != null) {
-                String topUser = findTopUserWithHeap(genre);
+                String topUser = findTopUser(genre);
                 if (topUser != null) {
                     String[] parts = topUser.split(":");
                     System.out.println(parts[0] + ", " + genre.getGenreName() + ", " + parts[1]);
                 }
             }
         }
+
     }
 
-    private String findTopUserWithHeap(Genre genre) {
-        // MyBinaryHeapTree<Integer, String> topUsersHeap = new MyBinaryHeapTreeImpl<>(true, 20);
-
-        HashTable<String, Integer> userCounts = new ClosedHashTableImpl<>(3000, 0);
-        MyList<Movie> moviesInGenre = genre.getMoviesGenre();
+    private String findTopUser(Genre genre) {
+        HashTable<String, Integer> userCounts = new ClosedHashTableImpl<>(5000, 0);
 
         String currentTopUser = null;
         int currentMaxCount = 0;
-        int totalRatingsProcessed = 0;
 
-        int moviesToProcess = moviesInGenre.largo();
+        for (int movieIndex = 0; movieIndex < genre.getMoviesGenre().largo(); movieIndex++) {
+            Movie movie = genre.getMoviesGenre().obtener(movieIndex);
 
-        for (int movieIndex = 0; movieIndex < moviesToProcess; movieIndex++) {
-            Movie movie = moviesInGenre.obtener(movieIndex);
-            MyList<Rating> ratings = movie.getRatings();
+            for (int ratingIndex = 0; ratingIndex < movie.getRatings().largo(); ratingIndex++) {
+                String userId = movie.getRatings().obtener(ratingIndex).getUserId();
 
-            for (int ratingIndex = 0; ratingIndex < ratings.largo(); ratingIndex++) {
-                String userId = ratings.obtener(ratingIndex).getUserId();
-
-                totalRatingsProcessed++;
                 int newCount = updateUserCount(userCounts, userId);
                 if (newCount > currentMaxCount) {
                     currentMaxCount = newCount;
@@ -86,12 +89,14 @@ public class QueryUsersWithMostRatingsByGenre {
             }
         } else {
             Integer currentCount = elem.getValor();
+            Integer newCount = currentCount + 1;
             userCounts.borrar(userId);
             try {
                 userCounts.insertar(userId, currentCount + 1);
-                return currentCount + 1;
+                return newCount;
             } catch (ElementoYaExistenteException e) {
-                return currentCount;
+                elem = userCounts.pertenece(userId);
+                return elem != null ? elem.getValor() : newCount;
             }
         }
     }
