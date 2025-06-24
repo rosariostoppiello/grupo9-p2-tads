@@ -9,7 +9,9 @@ import um.edu.uy.tads.hash.ClosedHashTableImpl;
 import um.edu.uy.tads.hash.Elemento;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.MyList;
-import um.edu.uy.tads.list.linked.MyLinkedListImpl;
+import um.edu.uy.tads.tree.heap.DatoHeap;
+import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
+import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
 // query 6
 public class QueryUsersWithMostRatingsByGenre {
@@ -33,7 +35,7 @@ public class QueryUsersWithMostRatingsByGenre {
         for (int g = 0; g < top10Size; g++) {
             Genre genre = genreArray[g];
             if (genre != null) {
-                String topUser = findTopUserForGenre(genre);
+                String topUser = findTopUserWithHeap(genre);
                 if (topUser != null) {
                     String[] parts = topUser.split(":");
                     System.out.println(parts[0] + ", " + genre.getGenreName() + ", " + parts[1]);
@@ -42,51 +44,55 @@ public class QueryUsersWithMostRatingsByGenre {
         }
     }
 
+    private String findTopUserWithHeap(Genre genre) {
+        // MyBinaryHeapTree<Integer, String> topUsersHeap = new MyBinaryHeapTreeImpl<>(true, 20);
 
-
-    private String findTopUserForGenre(Genre genre) {
-        HashTable<String, Integer> userCounts = new ClosedHashTableImpl<>(50000,1);
+        HashTable<String, Integer> userCounts = new ClosedHashTableImpl<>(3000, 0);
         MyList<Movie> moviesInGenre = genre.getMoviesGenre();
 
-        for (int movieIndex = 0; movieIndex < moviesInGenre.largo(); movieIndex++) {
+        String currentTopUser = null;
+        int currentMaxCount = 0;
+        int totalRatingsProcessed = 0;
+
+        int moviesToProcess = moviesInGenre.largo();
+
+        for (int movieIndex = 0; movieIndex < moviesToProcess; movieIndex++) {
             Movie movie = moviesInGenre.obtener(movieIndex);
             MyList<Rating> ratings = movie.getRatings();
 
             for (int ratingIndex = 0; ratingIndex < ratings.largo(); ratingIndex++) {
                 String userId = ratings.obtener(ratingIndex).getUserId();
 
-                Elemento<String, Integer> elem = userCounts.pertenece(userId);
-                if (elem == null) {
-                    try {
-                        userCounts.insertar(userId, 1);
-                    } catch (ElementoYaExistenteException e) {
-                    }
-                } else {
-                    Integer currentCount = elem.getValor();
-                    userCounts.borrar(userId);
-                    try {
-                        userCounts.insertar(userId, currentCount + 1);
-                    } catch (ElementoYaExistenteException e) {
-                    }
+                totalRatingsProcessed++;
+                int newCount = updateUserCount(userCounts, userId);
+                if (newCount > currentMaxCount) {
+                    currentMaxCount = newCount;
+                    currentTopUser = userId;
                 }
             }
         }
-        MyLinkedListImpl<String> allUserIds = userCounts.allKeys();
-        if (allUserIds.largo() == 0) return null;
-
-        String topUserId = allUserIds.obtener(0);
-        int maxCount = userCounts.pertenece(topUserId).getValor();
-
-        for (int i = 1; i < allUserIds.largo(); i++) {
-            String userId = allUserIds.obtener(i);
-            int count = userCounts.pertenece(userId).getValor();
-            if (count > maxCount) {
-                maxCount = count;
-                topUserId = userId;
-            }
-        }
-
-        return topUserId + ":" + maxCount;
+        return currentTopUser != null ? currentTopUser + ":" + currentMaxCount : null;
     }
 
+    private int updateUserCount(HashTable<String, Integer> userCounts, String userId) {
+        Elemento<String, Integer> elem = userCounts.pertenece(userId);
+        if (elem == null) {
+            try {
+                userCounts.insertar(userId, 1);
+                return 1;
+            } catch (ElementoYaExistenteException e) {
+                elem = userCounts.pertenece(userId);
+                return elem != null ? elem.getValor() : 1;
+            }
+        } else {
+            Integer currentCount = elem.getValor();
+            userCounts.borrar(userId);
+            try {
+                userCounts.insertar(userId, currentCount + 1);
+                return currentCount + 1;
+            } catch (ElementoYaExistenteException e) {
+                return currentCount;
+            }
+        }
+    }
 }
