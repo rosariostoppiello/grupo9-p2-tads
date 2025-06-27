@@ -32,6 +32,7 @@ public class QueryUsersWithMostRatingsByGenre {
                 } else {
                     top10GenresHeap.agregar(minElement.getKey(), minElement.getData());
                 }
+                minElement = null;
             }
         }
 
@@ -49,10 +50,17 @@ public class QueryUsersWithMostRatingsByGenre {
                 if (topUser != null) {
                     String[] parts = topUser.split(":");
                     System.out.println(parts[0] + ", " + genre.getGenreName() + ", " + parts[1]);
+
+                    for (int j = 0; j < parts.length; j++) {
+                        parts[j] = null;
+                    }
+                    parts = null;
                 }
             }
+            top10Array[i] = null;
         }
-
+        top10Array = null;
+        top10GenresHeap = null;
     }
 
     private String findTopUser(Genre genre) {
@@ -74,6 +82,7 @@ public class QueryUsersWithMostRatingsByGenre {
                 }
             }
         }
+        userCounts = null;
         return currentTopUser != null ? currentTopUser + ":" + currentMaxCount : null;
     }
 

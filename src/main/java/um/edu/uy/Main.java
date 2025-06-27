@@ -36,7 +36,6 @@ public class Main {
                 uMovieSystem.loadMovies(); // movies, collections, languages, genres
                 uMovieSystem.loadRatings();
                 uMovieSystem.loadCredits();
-                System.gc();
 
                 System.out.println(uMovieSystem.getGenresById().elementos());
                 System.out.println(uMovieSystem.getLanguagesByName().elementos());
@@ -71,7 +70,6 @@ public class Main {
                     switch (option) {
                         case 1: case 2: case 3: case 4: case 5: case 6:
                             redirectQueryUMovie(uMovieSystem, option);
-                            System.gc();
                             break;
                         case 7:
                             System.out.println("Gracias por su(s) consulta(s)!");

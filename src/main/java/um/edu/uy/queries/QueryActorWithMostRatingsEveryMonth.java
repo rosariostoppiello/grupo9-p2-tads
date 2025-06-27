@@ -32,17 +32,20 @@ public class QueryActorWithMostRatingsEveryMonth {
         ActorMonthData[] bestActorByMonth = new ActorMonthData[13];
 
         // optimization --> preload movies and precalculate ratings by month for each movie
+        int movieCount = moviesById.elementos();;
         Movie[] allMovies = new Movie[moviesById.elementos()];
-        int movieCount = 0;
+        int movieIndex = 0;
 
         for (Elemento<String, Movie> movieElement : moviesById) {
-            allMovies[movieCount++] = movieElement.getValor();
+            allMovies[movieIndex++] = movieElement.getValor();
         }
 
-        int[][] movieRatingsByMonth = new int[movieCount][13];
+        int[][] movieRatingsByMonth = new int[movieIndex][13];
 
-        for (int i = 0; i < movieCount; i++) {
+        for (int i = 0; i < movieIndex; i++) {
             Movie movie = allMovies[i];
+            int ratingsSize = movie.getRatings().largo();
+
             for (int ratingIndex = 0; ratingIndex < movie.getRatings().largo(); ratingIndex++) {
                 Rating rating = movie.getRatings().obtener(ratingIndex);
                 LocalDate timestamp = rating.getDate();
@@ -51,8 +54,8 @@ public class QueryActorWithMostRatingsEveryMonth {
             }
         }
 
-        HashTable<String, Integer> movieIdToIndex = new ClosedHashTableImpl<>(movieCount * 2, 0);
-        for (int i = 0; i < movieCount; i++) {
+        HashTable<String, Integer> movieIdToIndex = new ClosedHashTableImpl<>(movieIndex * 2, 0);
+        for (int i = 0; i < movieIndex; i++) {
             try {
                 movieIdToIndex.insertar(allMovies[i].getMovieId(), i);
             } catch (ElementoYaExistenteException e) {}
@@ -67,8 +70,9 @@ public class QueryActorWithMostRatingsEveryMonth {
             int[] ratingsPerMonth = new int[13];
             int[] moviesPerMonth = new int[13];
 
-            for (int movieIndex = 0; movieIndex < actor.getActivityActor().largo(); movieIndex++) {
-                String movieId = actor.getActivityActor().obtener(movieIndex);
+            int activitySize = actor.getActivityActor().largo();
+            for (int movieIdx = 0; movieIdx < actor.getActivityActor().largo(); movieIdx++) {
+                String movieId = actor.getActivityActor().obtener(movieIdx);
 
                 Elemento<String, Integer> indexElement = movieIdToIndex.pertenece(movieId);
                 if (indexElement != null) {
@@ -91,6 +95,11 @@ public class QueryActorWithMostRatingsEveryMonth {
                     }
                 }
             }
+
+            for (int i = 1; i <= 12; i++) {
+                ratingsPerMonth[i] = 0;
+                moviesPerMonth[i] = 0;
+            }
         }
 
         for (int month = 1; month <= 12; month++) {
@@ -100,5 +109,21 @@ public class QueryActorWithMostRatingsEveryMonth {
                         best.moviesCount + ", " + best.ratingsCount);
             }
         }
+
+        for (int i = 0; i < movieCount; i++) {
+            allMovies[i] = null;
+            for (int j = 0; j < 13; j++) {
+                movieRatingsByMonth[i][j] = 0;
+            }
+            movieRatingsByMonth[i] = null;
+        }
+        allMovies = null;
+        movieRatingsByMonth = null;
+        movieIdToIndex = null;
+
+        for (int i = 0; i < bestActorByMonth.length; i++) {
+            bestActorByMonth[i] = null;
+        }
+        bestActorByMonth = null;
     }
 }
