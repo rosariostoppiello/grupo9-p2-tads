@@ -3,9 +3,9 @@ package um.edu.uy.queries;
 import um.edu.uy.entities.Actor;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.entities.Rating;
-import um.edu.uy.tads.exceptions.ElementoYaExistenteException;
+import um.edu.uy.tads.exceptions.ElementAlreadyExistsException;
 import um.edu.uy.tads.hash.ClosedHashTableImpl;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 
 import java.time.LocalDate;
@@ -32,22 +32,27 @@ public class QueryActorWithMostRatingsEveryMonth {
         ActorMonthData[] bestActorByMonth = new ActorMonthData[13];
 
         // optimization --> preload movies and precalculate ratings by month for each movie
-        int movieCount = moviesById.elementos();;
-        Movie[] allMovies = new Movie[moviesById.elementos()];
+        int movieCount = moviesById.elements();;
+        Movie[] allMovies = new Movie[moviesById.elements()];
         int movieIndex = 0;
 
-        for (Elemento<String, Movie> movieElement : moviesById) {
-            allMovies[movieIndex++] = movieElement.getValor();
+        for (Element<String, Movie> movieElement : moviesById) {
+            allMovies[movieIndex++] = movieElement.getValue();
         }
 
         int[][] movieRatingsByMonth = new int[movieIndex][13];
 
         for (int i = 0; i < movieIndex; i++) {
             Movie movie = allMovies[i];
-            int ratingsSize = movie.getRatings().largo();
+            int ratingsSize = movie.getRatings().size();
 
-            for (int ratingIndex = 0; ratingIndex < movie.getRatings().largo(); ratingIndex++) {
-                Rating rating = movie.getRatings().obtener(ratingIndex);
+//            for (int ratingIndex = 0; ratingIndex < movie.getRatings().size(); ratingIndex++) {
+//                Rating rating = movie.getRatings().find(ratingIndex);
+//                LocalDate timestamp = rating.getDate();
+//                int month = timestamp.getMonthValue();
+//                movieRatingsByMonth[i][month]++;
+//            }
+            for (Rating rating : movie.getRatings()) {
                 LocalDate timestamp = rating.getDate();
                 int month = timestamp.getMonthValue();
                 movieRatingsByMonth[i][month]++;
@@ -57,26 +62,23 @@ public class QueryActorWithMostRatingsEveryMonth {
         HashTable<String, Integer> movieIdToIndex = new ClosedHashTableImpl<>(movieIndex * 2, 0);
         for (int i = 0; i < movieIndex; i++) {
             try {
-                movieIdToIndex.insertar(allMovies[i].getMovieId(), i);
-            } catch (ElementoYaExistenteException e) {}
+                movieIdToIndex.insert(allMovies[i].getMovieId(), i);
+            } catch (ElementAlreadyExistsException e) {}
         }
 
         // iteration by actor
-        for (Elemento<String, Actor> actorElement : actorsById) {
-            Actor actor = actorElement.getValor();
-            String actorId = actorElement.getClave();
+        for (Element<String, Actor> actorElement : actorsById) {
+            Actor actor = actorElement.getValue();
+            String actorId = actorElement.getKey();
             String actorName = actor.getName();
 
             int[] ratingsPerMonth = new int[13];
             int[] moviesPerMonth = new int[13];
 
-            int activitySize = actor.getActivityActor().largo();
-            for (int movieIdx = 0; movieIdx < actor.getActivityActor().largo(); movieIdx++) {
-                String movieId = actor.getActivityActor().obtener(movieIdx);
-
-                Elemento<String, Integer> indexElement = movieIdToIndex.pertenece(movieId);
+            for (String movieId : actor.getActivityActor()) {
+                Element<String, Integer> indexElement = movieIdToIndex.find(movieId);
                 if (indexElement != null) {
-                    int arrayIndex = indexElement.getValor();
+                    int arrayIndex = indexElement.getValue();
                     for (int month = 1; month <= 12; month++) {
                         int ratingsInMonth = movieRatingsByMonth[arrayIndex][month];
                         if (ratingsInMonth > 0) {
@@ -110,7 +112,7 @@ public class QueryActorWithMostRatingsEveryMonth {
                 ActorMonthData best = bestActorByMonth[month];
                 String monthName = monthNames[month - 1];
                 System.out.println(monthName + ", " + best.actorName + ", " +
-                        best.moviesCount + ", " + best.ratingsCount);
+                        best.ratingsCount + ", " + best.moviesCount);
             }
         }
 

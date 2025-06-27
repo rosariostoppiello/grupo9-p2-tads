@@ -13,7 +13,7 @@ public class Director extends Person implements Comparable<Director> {
     }
 
     public void addMovieId(String movieId) {
-        if (movieId != null && !movieIds.elementoSeEncuentra(movieId)) {
+        if (movieId != null && !movieIds.elementExistsIn(movieId)) {
             movieIds.addLast(movieId);
         }
     }
@@ -27,7 +27,7 @@ public class Director extends Person implements Comparable<Director> {
     }
 
     public int getMovieCount() {
-        return movieIds.largo();
+        return movieIds.size();
     }
 
     @Override

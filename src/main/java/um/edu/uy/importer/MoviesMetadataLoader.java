@@ -4,7 +4,7 @@ import um.edu.uy.entities.Collection;
 import um.edu.uy.entities.Genre;
 import um.edu.uy.entities.Language;
 import um.edu.uy.entities.Movie;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
@@ -44,8 +44,8 @@ public class MoviesMetadataLoader {
 
             String collectionId = extractId(belongsToCollectionStr);
             Movie movie = new Movie(movieId, title, originalLanguage, revenue, collectionId);
-            if (moviesById.pertenece(movieId) == null) {
-                moviesById.insertar(movieId, movie);
+            if (moviesById.find(movieId) == null) {
+                moviesById.insert(movieId, movie);
             }
 
             if (collectionId != null && !collectionId.isEmpty()) { // if the movie is part of a collection
@@ -94,7 +94,7 @@ public class MoviesMetadataLoader {
     @SuppressWarnings("unchecked")
     private static void addToCollection(String collectionId, String collectionStr, Movie movie,
                                         HashTable<String, Collection> collectionsById) {
-        Elemento<String, Collection> element = collectionsById.pertenece(collectionId);
+        Element<String, Collection> element = collectionsById.find(collectionId);
         Collection collection;
 
         if (element == null) {
@@ -105,9 +105,9 @@ public class MoviesMetadataLoader {
                 name = movie.getTitle();
             }
             collection = new Collection(collectionId, name, new MyLinkedListImpl<>());
-            collectionsById.insertar(collectionId, collection);
+            collectionsById.insert(collectionId, collection);
         } else {
-            collection = element.getValor();
+            collection = element.getValue();
         }
         collection.addMovieToCollection(movie);
     }
@@ -137,14 +137,14 @@ public class MoviesMetadataLoader {
 
     @SuppressWarnings("unchecked")
     private static void addToGenre(String genreId, String genreName, Movie movie, HashTable<String, Genre> genresById) {
-        Elemento<String, Genre> element = genresById.pertenece(genreId);
+        Element<String, Genre> element = genresById.find(genreId);
         Genre genre;
 
         if (element == null) {
             genre = new Genre(genreId, genreName, new MyLinkedListImpl<>());
-            genresById.insertar(genreId, genre);
+            genresById.insert(genreId, genre);
         } else {
-            genre = element.getValor();
+            genre = element.getValue();
         }
         genre.addMovieToGenre(movie);
     }
@@ -155,15 +155,15 @@ public class MoviesMetadataLoader {
             return;
         }
         languageCode = languageCode.trim().toLowerCase();
-        Elemento<String, Language> element = languagesByName.pertenece(languageCode);
+        Element<String, Language> element = languagesByName.find(languageCode);
         Language language;
 
         if (element == null) { // if the language does not exist
             language = new Language(languageCode);
             language.setMoviesLanguage(new MyLinkedListImpl<>());
-            languagesByName.insertar(languageCode, language);
+            languagesByName.insert(languageCode, language);
         } else {
-            language = element.getValor();
+            language = element.getValue();
         }
 
         if (language.getMoviesLanguage() != null) {

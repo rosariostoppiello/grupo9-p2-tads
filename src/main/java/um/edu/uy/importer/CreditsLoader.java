@@ -3,7 +3,7 @@ package um.edu.uy.importer;
 import um.edu.uy.entities.Actor;
 import um.edu.uy.entities.Director;
 import um.edu.uy.tads.hash.HashTable;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -86,18 +86,18 @@ public class CreditsLoader {
                 if (nameEnd != -1) {
                     String name = cast.substring(nameStart, nameEnd);
 
-                    Elemento<String, Actor> elemento = actorsById.pertenece(id);
+                    Element<String, Actor> elemento = actorsById.find(id);
                     Actor actor;
 
                     if (elemento == null) {
                         actor = new Actor(id, name);
                         try {
-                            actorsById.insertar(id, actor);
+                            actorsById.insert(id, actor);
                         } catch (Exception e) {
                             // ignore
                         }
                     } else {
-                        actor = elemento.getValor();
+                        actor = elemento.getValue();
                     }
                     actor.addMovieId(movieId);
                 }
@@ -139,17 +139,17 @@ public class CreditsLoader {
                     }
 
                     if (job.equals("Director")) {
-                        Elemento<String, Director> directorElement = directorsById.pertenece(id);
+                        Element<String, Director> directorElement = directorsById.find(id);
                         Director director;
 
                         if (directorElement == null) {
                             director = new Director(id, name);
                             try {
-                                directorsById.insertar(id, director);
+                                directorsById.insert(id, director);
                             } catch (Exception e) {
                             }
                         } else {
-                            director = directorElement.getValor();
+                            director = directorElement.getValue();
                         }
 
                         director.addMovieId(movieId);

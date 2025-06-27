@@ -2,9 +2,10 @@ package um.edu.uy.queries;
 
 import um.edu.uy.entities.Movie;
 
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.entities.Rating;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
-import um.edu.uy.tads.tree.heap.DatoHeap;
+import um.edu.uy.tads.tree.heap.HeapData;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
@@ -17,28 +18,28 @@ public class QueryTop10MoviesByRating {
         MyBinaryHeapTree<Double, Movie> top10Heap = new MyBinaryHeapTreeImpl<>(false, 11);
 
         // heap insertions
-        for (Elemento<String, Movie> elemento : movies) {
-            Movie movie = elemento.getValor();
+        for (Element<String, Movie> elemento : movies) {
+            Movie movie = elemento.getValue();
 
             if (!movie.getRatings().isEmpty()) {
                 double sum = 0.0;
-                int ratingsCount = movie.getRatings().largo();
+                int ratingsCount = movie.getRatings().size();
 
                 if (ratingsCount < 100) continue;
 
-                for (int j = 0; j < ratingsCount; j++) {
-                    sum +=movie.getRatings().obtener(j).getRating();
+                for (Rating rating : movie.getRatings()) {
+                    sum += rating.getRating();
                 }
                 Double actualMean = sum / ratingsCount;
 
-                if (top10Heap.tamanio() < 10) {
-                    top10Heap.agregar(actualMean, movie);
+                if (top10Heap.sizeHeap() < 10) {
+                    top10Heap.add(actualMean, movie);
                 } else {
-                    DatoHeap<Double, Movie> minElement = top10Heap.eliminar();
+                    HeapData<Double, Movie> minElement = top10Heap.delete();
                     if (actualMean > minElement.getKey()) {
-                        top10Heap.agregar(actualMean, movie);
+                        top10Heap.add(actualMean, movie);
                     } else {
-                        top10Heap.agregar(minElement.getKey(), minElement.getData());
+                        top10Heap.add(minElement.getKey(), minElement.getData());
                     }
                     minElement = null;
                 }
@@ -46,10 +47,10 @@ public class QueryTop10MoviesByRating {
         }
 
         // temporal array
-        DatoHeap<Double, Movie>[] tempArray = new DatoHeap[top10Heap.tamanio()];
-        int count = top10Heap.tamanio();
+        HeapData<Double, Movie>[] tempArray = new HeapData[top10Heap.sizeHeap()];
+        int count = top10Heap.sizeHeap();
         for (int i = 0; i < count; i++) {
-            tempArray[i] = top10Heap.eliminar();
+            tempArray[i] = top10Heap.delete();
         }
 
         // print in reverse order

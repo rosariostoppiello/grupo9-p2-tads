@@ -3,12 +3,11 @@ package um.edu.uy.queries;
 import um.edu.uy.entities.Genre;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.entities.Rating;
-import um.edu.uy.tads.exceptions.ElementoYaExistenteException;
+import um.edu.uy.tads.exceptions.ElementAlreadyExistsException;
 import um.edu.uy.tads.hash.ClosedHashTableImpl;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
-import um.edu.uy.tads.list.MyList;
-import um.edu.uy.tads.tree.heap.DatoHeap;
+import um.edu.uy.tads.tree.heap.HeapData;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
@@ -19,28 +18,28 @@ public class QueryUsersWithMostRatingsByGenre {
         // find top 10 genres
         MyBinaryHeapTree<Integer, Genre> top10GenresHeap = new MyBinaryHeapTreeImpl<>(false, 11);
 
-        for (Elemento<String, Genre> element : genresById) {
-            Genre genre = element.getValor();
+        for (Element<String, Genre> element : genresById) {
+            Genre genre = element.getValue();
             Integer totalRatings = genre.getTotalRatingsCount();
 
-            if (top10GenresHeap.tamanio() < 10) {
-                top10GenresHeap.agregar(totalRatings, genre);
+            if (top10GenresHeap.sizeHeap() < 10) {
+                top10GenresHeap.add(totalRatings, genre);
             } else {
-                DatoHeap<Integer, Genre> minElement = top10GenresHeap.eliminar();
+                HeapData<Integer, Genre> minElement = top10GenresHeap.delete();
                 if (totalRatings > minElement.getKey()) {
-                    top10GenresHeap.agregar(totalRatings, genre);
+                    top10GenresHeap.add(totalRatings, genre);
                 } else {
-                    top10GenresHeap.agregar(minElement.getKey(), minElement.getData());
+                    top10GenresHeap.add(minElement.getKey(), minElement.getData());
                 }
                 minElement = null;
             }
         }
 
-        DatoHeap<Integer, Genre>[] top10Array = new DatoHeap[top10GenresHeap.tamanio()];
-        int count = top10GenresHeap.tamanio();
+        HeapData<Integer, Genre>[] top10Array = new HeapData[top10GenresHeap.sizeHeap()];
+        int count = top10GenresHeap.sizeHeap();
 
         for (int i = 0; i < count; i++) {
-            top10Array[i] = top10GenresHeap.eliminar();
+            top10Array[i] = top10GenresHeap.delete();
         }
 
         for (int i = count - 1; i >= 0; i--) {
@@ -69,12 +68,11 @@ public class QueryUsersWithMostRatingsByGenre {
         String currentTopUser = null;
         int currentMaxCount = 0;
 
-        for (int movieIndex = 0; movieIndex < genre.getMoviesGenre().largo(); movieIndex++) {
-            Movie movie = genre.getMoviesGenre().obtener(movieIndex);
+        for (int movieIndex = 0; movieIndex < genre.getMoviesGenre().size(); movieIndex++) {
+            Movie movie = genre.getMoviesGenre().find(movieIndex);
 
-            for (int ratingIndex = 0; ratingIndex < movie.getRatings().largo(); ratingIndex++) {
-                String userId = movie.getRatings().obtener(ratingIndex).getUserId();
-
+            for (Rating rating : movie.getRatings()) {
+                String userId = rating.getUserId();
                 int newCount = updateUserCount(userCounts, userId);
                 if (newCount > currentMaxCount) {
                     currentMaxCount = newCount;
@@ -87,25 +85,25 @@ public class QueryUsersWithMostRatingsByGenre {
     }
 
     private int updateUserCount(HashTable<String, Integer> userCounts, String userId) {
-        Elemento<String, Integer> elem = userCounts.pertenece(userId);
+        Element<String, Integer> elem = userCounts.find(userId);
         if (elem == null) {
             try {
-                userCounts.insertar(userId, 1);
+                userCounts.insert(userId, 1);
                 return 1;
-            } catch (ElementoYaExistenteException e) {
-                elem = userCounts.pertenece(userId);
-                return elem != null ? elem.getValor() : 1;
+            } catch (ElementAlreadyExistsException e) {
+                elem = userCounts.find(userId);
+                return elem != null ? elem.getValue() : 1;
             }
         } else {
-            Integer currentCount = elem.getValor();
+            Integer currentCount = elem.getValue();
             Integer newCount = currentCount + 1;
-            userCounts.borrar(userId);
+            userCounts.delete(userId);
             try {
-                userCounts.insertar(userId, currentCount + 1);
+                userCounts.insert(userId, currentCount + 1);
                 return newCount;
-            } catch (ElementoYaExistenteException e) {
-                elem = userCounts.pertenece(userId);
-                return elem != null ? elem.getValor() : newCount;
+            } catch (ElementAlreadyExistsException e) {
+                elem = userCounts.find(userId);
+                return elem != null ? elem.getValue() : newCount;
             }
         }
     }

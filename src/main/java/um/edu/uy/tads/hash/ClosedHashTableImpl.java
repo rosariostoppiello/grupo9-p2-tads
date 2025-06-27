@@ -1,98 +1,91 @@
 package um.edu.uy.tads.hash;
 
-import um.edu.uy.tads.exceptions.ElementoYaExistenteException;
+import um.edu.uy.tads.exceptions.ElementAlreadyExistsException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-// hashing de dispersión abierta --> tanto lineal como cuadrática
+
 public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T>> implements HashTable<K, T> {
 
-    private Elemento<K, T>[] tabla;
+    private Element<K, T>[] table;
     private int totalSize;
-    private int elementos;
-    private final int tipoResolucion; // 0 - lineal y 1 - cuadrática
-    private final Elemento<K, T> elementoBorrado; // tombstone !!
+    private int elements;
+    private final int typeResolution;
+    private final Element<K, T> deletedElement; // tombstone !!
 
-    public int elementos() {
-        return elementos;
+    public int elements() {
+        return elements;
     }
 
     @SuppressWarnings("unchecked")
-    public ClosedHashTableImpl(int totalSize, int tipoResolucion) {
-        this.totalSize = siguientePrimo(totalSize);
-        this.tabla = new Elemento[this.totalSize];
-        this.elementos = 0;
-        this.elementoBorrado = new Elemento<>(null, null);
+    public ClosedHashTableImpl(int totalSize, int typeResolution) {
+        this.totalSize = nextPrime(totalSize);
+        this.table = new Element[this.totalSize];
+        this.elements = 0;
+        this.deletedElement = new Element<>(null, null);
 
-        if (tipoResolucion != 0 && tipoResolucion != 1) {
-            throw new RuntimeException("Se debe ingresar 0 o 1 para escoger el método de resolución de colisiones.");
+        if (typeResolution != 0 && typeResolution != 1) {
+            throw new RuntimeException("Number must be either 0 or 1.");
         } else {
-            this.tipoResolucion = tipoResolucion;
+            this.typeResolution = typeResolution;
         }
     }
 
-    // función hash
     private int hashFuncion(K clave) {
         return Math.abs(clave.hashCode()) % totalSize;
     }
 
     @Override
-    public void insertar(K clave, T valor) throws ElementoYaExistenteException {
+    public void insert(K key, T value) throws ElementAlreadyExistsException {
 
-        if (elementos >= totalSize * 0.80) {
-            reestructuracion();
+        if (elements >= totalSize * 0.80) {
+            reestructuration();
         }
 
-        int pos = hashFuncion(clave);
+        int pos = hashFuncion(key);
         int i = 0;
 
-        if (tipoResolucion == 0) { // lineal
-            // mientras que la posición sea diferente de null y el valor no haya sido borrado lógicamente
-            while (tabla[(pos + i) % totalSize] != null && tabla[(pos + i) % totalSize] != elementoBorrado) {
-                if (tabla[(pos + i) % totalSize].getClave().equals(clave)) {
-                    throw new ElementoYaExistenteException("La clave ya existe en la tabla: " + clave);
+        if (typeResolution == 0) {
+            while (table[(pos + i) % totalSize] != null && table[(pos + i) % totalSize] != deletedElement) {
+                if (table[(pos + i) % totalSize].getKey().equals(key)) {
+                    throw new ElementAlreadyExistsException("La clave ya existe en la tabla: " + key);
                 }
                 i++;
             }
-            // llego a acá si encuentro una posición null o que el valor no null que había fue borrado
-            tabla[(pos + i) % totalSize] = new Elemento<>(clave, valor);
-        } else if (tipoResolucion == 1) { // cuadrática
-            while (tabla[(pos + (i * i)) % totalSize] != null && tabla[(pos + (i * i)) % totalSize] != elementoBorrado) {
-                if (tabla[(pos + (i * i)) % totalSize].getClave().equals(clave)) {
-                    throw new ElementoYaExistenteException("La clave ya existe en la tabla: " + clave);
+            table[(pos + i) % totalSize] = new Element<>(key, value);
+        } else if (typeResolution == 1) { // cuadrática
+            while (table[(pos + (i * i)) % totalSize] != null && table[(pos + (i * i)) % totalSize] != deletedElement) {
+                if (table[(pos + (i * i)) % totalSize].getKey().equals(key)) {
+                    throw new ElementAlreadyExistsException("La clave ya existe en la tabla: " + key);
                 }
                 i++;
-                if (i >= totalSize) break; // evito bucle como en el ejercicio 3.4 de insertar en tablas
+                if (i >= totalSize) break;
             }
-            // llego a acá si encuentro una posición null o que el valor no null que había fue borrado
-            tabla[(pos + i * i) % totalSize] = new Elemento<>(clave, valor);
+            table[(pos + i * i) % totalSize] = new Element<>(key, value);
         }
-
-
-        elementos++;
-
+        elements++;
     }
 
     @Override
-    public Elemento pertenece(K clave) {
+    public Element find(K clave) {
 
         int pos = hashFuncion(clave);
         int i = 0;
 
-        if (tipoResolucion == 0) {
-            while (tabla[(pos + i) % totalSize] != null) { // chequeo que a donde me lleva la clave no sea null
-                if (tabla[(pos + i) % totalSize] != elementoBorrado && tabla[(pos + i) % totalSize].getClave().equals(clave)) {
+        if (typeResolution == 0) {
+            while (table[(pos + i) % totalSize] != null) { // chequeo que a donde me lleva la clave no sea null
+                if (table[(pos + i) % totalSize] != deletedElement && table[(pos + i) % totalSize].getKey().equals(clave)) {
                     // si esa posición no tiene el atributo borrado=true y que la clave sea igual a la clave
-                    return tabla[(pos + i) % totalSize];
+                    return table[(pos + i) % totalSize];
                 }
                 i++; // ocurre que si no es igual la clave es porque hubo una colisión y moví el elemento de forma lineal
                 if (i >= totalSize) break;
             }
-        } else if (tipoResolucion == 1) {
-            while (tabla[(pos + i * i) % totalSize] != null) { // chequeo que a donde me lleva la clave no sea null
-                if (tabla[(pos + (i * i)) % totalSize] != elementoBorrado && tabla[(pos + (i * i)) % totalSize].getClave().equals(clave)) {
-                    return tabla[(pos + i * i) % totalSize];
+        } else if (typeResolution == 1) {
+            while (table[(pos + i * i) % totalSize] != null) { // chequeo que a donde me lleva la clave no sea null
+                if (table[(pos + (i * i)) % totalSize] != deletedElement && table[(pos + (i * i)) % totalSize].getKey().equals(clave)) {
+                    return table[(pos + i * i) % totalSize];
                 }
                 i++;
                 if (i >= totalSize) break;
@@ -103,25 +96,25 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T
     }
 
     @Override
-    public void borrar(K clave) {
+    public void delete(K clave) {
         int pos = hashFuncion(clave);
         int i = 0;
 
-        if (tipoResolucion == 0) {
-            while (tabla[(pos + i) % totalSize] != null) {
-                if (tabla[(pos + i) % totalSize] != elementoBorrado && tabla[(pos + i) % totalSize].getClave().equals(clave)) {
-                    tabla[(pos + i) % totalSize] = elementoBorrado;
-                    elementos--;
+        if (typeResolution == 0) {
+            while (table[(pos + i) % totalSize] != null) {
+                if (table[(pos + i) % totalSize] != deletedElement && table[(pos + i) % totalSize].getKey().equals(clave)) {
+                    table[(pos + i) % totalSize] = deletedElement;
+                    elements--;
                     return;
                 }
                 i++;
                 if (i >= totalSize) break;
             }
-        } else if (tipoResolucion == 1) {
-            while (tabla[(pos + (i * i)) % totalSize] != null) {
-                if (tabla[(pos + (i * i)) % totalSize] != elementoBorrado && tabla[(pos + (i * i)) % totalSize].getClave().equals(clave)) {
-                    tabla[(pos + (i * i)) % totalSize] = elementoBorrado;
-                    elementos--;
+        } else if (typeResolution == 1) {
+            while (table[(pos + (i * i)) % totalSize] != null) {
+                if (table[(pos + (i * i)) % totalSize] != deletedElement && table[(pos + (i * i)) % totalSize].getKey().equals(clave)) {
+                    table[(pos + (i * i)) % totalSize] = deletedElement;
+                    elements--;
                     return;
                 }
                 i++;
@@ -132,20 +125,20 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T
     }
 
     @SuppressWarnings("unchecked")
-    private void reestructuracion() {
+    private void reestructuration() {
 
-        Elemento<K, T>[] tablaAnterior = tabla;
+        Element<K, T>[] tablaAnterior = table;
         int sizeAnterior = totalSize;
 
-        totalSize = siguientePrimo(sizeAnterior * 2);
-        tabla = new Elemento[totalSize];
-        elementos = 0;
+        totalSize = nextPrime(sizeAnterior * 2);
+        table = new Element[totalSize];
+        elements = 0;
 
-        for (Elemento<K, T> elemento : tablaAnterior) {
-            if (elemento != null && elemento != elementoBorrado) {
+        for (Element<K, T> elemento : tablaAnterior) {
+            if (elemento != null && elemento != deletedElement) {
                 try {
-                    insertar(elemento.getClave(), elemento.getValor());
-                } catch (ElementoYaExistenteException e) {
+                    insert(elemento.getKey(), elemento.getValue());
+                } catch (ElementAlreadyExistsException e) {
                     // no va a pasar
                 }
             }
@@ -153,30 +146,28 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T
 
     }
 
-    private static final int[] PRIMOS = {
+    private static final int[] PRIMES = {
             17, 29, 53, 97, 193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317, 196613,
             393241, 786433, 1572869, 3145739, 6291469, 12582917, 25165843, 50331653, 100663319,
             201326611, 402653189, 805306457, 1610612741};
 
-    private int siguientePrimo(int numero) {
-        for (int primo : PRIMOS) {
-            if (primo > numero) {
-                return primo;
+    private int nextPrime(int number) {
+        for (int prime : PRIMES) {
+            if (prime > number) {
+                return prime;
+
             }
         }
         throw new RuntimeException("No se ha encontrado un número primo mayor al doble del tamaño actual.");
 
-        // esto pensé en hacerlo con otro procedimiento que iba calculando los números primos pero es mucho
-        // más costoso a efectos de este práctico prefiero utilizar una lista, pues no hay tantos números
-        // primos a este nivel de cantidades relativamente bajas (llega hasta 1610612741).
     }
 
     @Override
-    public Iterator<Elemento<K, T>> iterator() {
+    public Iterator<Element<K, T>> iterator() {
         return new HashTableIterator();
     }
 
-    private class HashTableIterator implements Iterator<Elemento<K, T>> {
+    private class HashTableIterator implements Iterator<Element<K, T>> {
 
         private int currentIndex = 0;
 
@@ -190,30 +181,30 @@ public class ClosedHashTableImpl<K extends Comparable<K>, T extends Comparable<T
         }
 
         @Override
-        public Elemento<K, T> next() {
+        public Element<K, T> next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("No hay más elementos en la tabla hash.");
             }
-            Elemento<K, T> elemento = tabla[currentIndex];
+            Element<K, T> elemento = table[currentIndex];
             currentIndex++;
             goToNextValidElement();
             return elemento;
         }
 
         private void goToNextValidElement() {
-            while (currentIndex < totalSize && (tabla[currentIndex] == null || tabla[currentIndex] == elementoBorrado)) {
+            while (currentIndex < totalSize && (table[currentIndex] == null || table[currentIndex] == deletedElement)) {
                 currentIndex++;
             }
         }
     }
 
     @Override
-    public void forEach(Consumer<? super Elemento<K, T>> action) {
+    public void forEach(Consumer<? super Element<K, T>> action) {
         HashTable.super.forEach(action);
     }
 
     @Override
-    public Spliterator<Elemento<K, T>> spliterator() {
+    public Spliterator<Element<K, T>> spliterator() {
         return HashTable.super.spliterator();
     }
 

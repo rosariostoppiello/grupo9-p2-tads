@@ -1,11 +1,11 @@
 package um.edu.uy.tads.tree.heap;
 
-public class DatoHeap<K extends Comparable<K>, T> {
+public class HeapData<K extends Comparable<K>, T> {
 
     private K key;
     private T data;
 
-    public DatoHeap(K key, T data) {
+    public HeapData(K key, T data) {
         this.key = key;
         this.data = data;
     }

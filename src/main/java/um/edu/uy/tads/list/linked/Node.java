@@ -3,15 +3,15 @@ package um.edu.uy.tads.list.linked;
 public class Node<T> {
 
     private Node<T> next;
-    private T valor;
+    private T value;
 
     public Node(T valor) {
         this.next = null;
-        this.valor = valor;
+        this.value = valor;
     }
 
     public Node() {
-        this.valor = null;
+        this.value = null;
         this.next = null;
     }
 
@@ -23,12 +23,12 @@ public class Node<T> {
         this.next = next;
     }
 
-    public T getValor() {
-        return valor;
+    public T getValue() {
+        return value;
     }
 
-    public void setValor(T valor) {
-        this.valor = valor;
+    public void setValue(T value) {
+        this.value = value;
     }
 
 }

@@ -30,21 +30,14 @@ public class UMovie {
     }
 
     // load data
-    public void loadMovies() {
+    public void loadData() {
         MoviesMetadataLoader.loadMovies("movies_metadata.csv", moviesById, collectionsById, genresById, languagesByName);
-    }
-
-    public void loadRatings() {
         RatingsLoader.loadRatings("ratings_1mm.csv", moviesById);
-    }
-
-    public void loadCredits() {
         CreditsLoader.loadCredits("credits.csv", actorsById, directorsById);
     }
 
     // queries
     public void query(int num) {
-
         switch (num) {
             case 1:
                 QueryTop5MoviesByLanguage query1 = new QueryTop5MoviesByLanguage();

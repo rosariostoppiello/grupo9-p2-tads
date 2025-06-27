@@ -1,7 +1,7 @@
 package um.edu.uy.queries;
 
 import um.edu.uy.entities.Movie;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 
 public class QueryTop5MoviesByLanguage {
@@ -24,15 +24,15 @@ public class QueryTop5MoviesByLanguage {
     private void topMoviesLanguage(HashTable<String, Movie> movies, String language,
                                    Movie[] topMovies, int[] ratingCounts) {
         for (int i = 1; i <= 50000; i++) {
-            Elemento<String, Movie> element = movies.pertenece(String.valueOf(i));
+            Element<String, Movie> element = movies.find(String.valueOf(i));
             if (element == null) continue;
 
-            Movie movie = element.getValor();
+            Movie movie = element.getValue();
 
             if (movie.getOriginalLanguage() != null &&
                     movie.getOriginalLanguage().equals(language)) {
 
-                int ratingCount = movie.getRatings() != null ? movie.getRatings().largo() : 0;
+                int ratingCount = movie.getRatings() != null ? movie.getRatings().size() : 0;
                 tryAddToTop5(movie, ratingCount, topMovies, ratingCounts);
             }
         }

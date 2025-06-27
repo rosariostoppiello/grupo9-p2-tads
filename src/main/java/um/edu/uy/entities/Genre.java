@@ -17,9 +17,9 @@ public class Genre implements Comparable<Genre> {
     public int getTotalRatingsCount() {
         int totalRatings = 0;
         Movie movie;
-        for (int i = 0; i < moviesGenre.largo(); i++) {
-            movie = moviesGenre.obtener(i);
-            totalRatings += movie.getRatings().largo();
+        for (int i = 0; i < moviesGenre.size(); i++) {
+            movie = moviesGenre.find(i);
+            totalRatings += movie.getRatings().size();
         }
         return totalRatings;
     }

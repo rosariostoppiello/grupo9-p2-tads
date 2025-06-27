@@ -2,24 +2,24 @@ package um.edu.uy.tads.list;
 
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
-public interface MyList<T extends Comparable<T>> {
+public interface MyList<T extends Comparable<T>> extends Iterable<T> {
 
-    T obtener(int index);
-    void agregar(T obj, Integer index);
-    void eliminar(int index);
+    T find(int index);
+    void add(T obj, Integer index);
+    void delete(int index);
 
-    Boolean elementoSeEncuentra(T obj);
+    Boolean elementExistsIn(T obj);
 
     void addFirst(T value);
     void addLast(T value);
 
     Boolean isEmpty();
-    int largo();
+    int size();
 
-    void intercambiar(T obj, int direccion);
-    MyLinkedListImpl<T> agregarLista(MyLinkedListImpl<T> listaAgregar);
-    MyLinkedListImpl<T> juntarListasSinInterseccion(MyLinkedListImpl<T> lista2);
+    void swap(T obj, int direccion);
+    MyLinkedListImpl<T> addList(MyLinkedListImpl<T> listaAgregar);
+    MyLinkedListImpl<T> addUpListsWithoutIntersection(MyLinkedListImpl<T> lista2);
     void addOrdered(T elemento);
-    void imprimirLista();
+    void printList();
 
 }

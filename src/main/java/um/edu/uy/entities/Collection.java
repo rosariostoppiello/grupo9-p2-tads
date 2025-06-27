@@ -1,6 +1,7 @@
 package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class Collection implements Comparable<Collection> {
 
@@ -13,7 +14,7 @@ public class Collection implements Comparable<Collection> {
     public Collection(String collectionId, String collectionName, MyList<Movie> moviesCollection) {
         this.collectionId = collectionId;
         this.collectionName = collectionName;
-        this.moviesCollection = moviesCollection;
+        this.moviesCollection = new MyLinkedListImpl<>();
     }
 
     public void addMovieToCollection(Movie movie) {

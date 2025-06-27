@@ -3,7 +3,7 @@ package um.edu.uy.queries;
 import um.edu.uy.entities.Director;
 import um.edu.uy.entities.Movie;
 import um.edu.uy.entities.Rating;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.MyList;
 
@@ -18,11 +18,11 @@ public class QueryTop10DirectorsByRating {
         Float[] medians = new Float[10];
 
         for (int id = 1; id <= 50000; id++) {
-            Elemento<String, Director> elem = directorsById.pertenece(String.valueOf(id));
+            Element<String, Director> elem = directorsById.find(String.valueOf(id));
             if (elem == null) continue;
 
-            Director director = elem.getValor();
-            if (director.getMovieIds().largo() <= 1) continue;
+            Director director = elem.getValue();
+            if (director.getMovieIds().size() <= 1) continue;
 
             Float[] ratings = getAllRatings(director, moviesById);
             if (ratings.length <= 100) continue;
@@ -33,7 +33,7 @@ public class QueryTop10DirectorsByRating {
 
         for (int i = 0; i < 10 && top10[i] != null; i++) {
             System.out.println(top10[i].getName() + ", " +
-                    top10[i].getMovieIds().largo() + ", " +
+                    top10[i].getMovieIds().size() + ", " +
                     String.format("%.2f", medians[i]));
         }
     }
@@ -42,13 +42,13 @@ public class QueryTop10DirectorsByRating {
         MyList<String> movieIds = director.getMovieIds();
 
         int totalRatings = 0;
-        for (int i = 0; i < movieIds.largo(); i++) {
-            Elemento<String, Movie> elem = moviesById.pertenece(movieIds.obtener(i));
+        for (int i = 0; i < movieIds.size(); i++) {
+            Element<String, Movie> elem = moviesById.find(movieIds.find(i));
             if (elem != null) {
-                Movie movie = elem.getValor();
+                Movie movie = elem.getValue();
                 MyList<Rating> movieRatings = movie.getRatings();
                 if (movieRatings != null) {
-                    totalRatings += movieRatings.largo();
+                    totalRatings += movieRatings.size();
                 }
             }
         }
@@ -56,14 +56,14 @@ public class QueryTop10DirectorsByRating {
         Float[] allRatings = new Float[totalRatings];
         int pos = 0;
 
-        for (int i = 0; i < movieIds.largo(); i++) {
-            Elemento<String, Movie> elem = moviesById.pertenece(movieIds.obtener(i));
+        for (int i = 0; i < movieIds.size(); i++) {
+            Element<String, Movie> elem = moviesById.find(movieIds.find(i));
             if (elem != null) {
-                Movie movie = elem.getValor();
+                Movie movie = elem.getValue();
                 MyList<Rating> ratings = movie.getRatings();
                 if (ratings != null) {
-                    for (int j = 0; j < ratings.largo(); j++) {
-                        allRatings[pos++] = ratings.obtener(j).getRating();
+                    for (int j = 0; j < ratings.size(); j++) {
+                        allRatings[pos++] = ratings.find(j).getRating();
                     }
                 }
             }

@@ -12,7 +12,7 @@ public class Actor extends Person implements Comparable<Actor> {
     }
 
     public void addMovieId(String movieId) {
-        if (movieId != null && !activityActor.elementoSeEncuentra(movieId)) {
+        if (movieId != null && !activityActor.elementExistsIn(movieId)) {
             activityActor.addLast(movieId);
         }
     }

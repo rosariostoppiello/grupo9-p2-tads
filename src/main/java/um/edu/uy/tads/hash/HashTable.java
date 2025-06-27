@@ -1,10 +1,9 @@
 package um.edu.uy.tads.hash;
-import um.edu.uy.tads.exceptions.ElementoYaExistenteException;
-import um.edu.uy.tads.list.linked.MyLinkedListImpl;
+import um.edu.uy.tads.exceptions.ElementAlreadyExistsException;
 
-public interface HashTable<K extends Comparable<K>, T extends Comparable<T>> extends Iterable<Elemento<K, T>> {
-    public void insertar(K clave, T valor) throws ElementoYaExistenteException;
-    public Elemento<K ,T> pertenece(K clave);
-    public void borrar(K clave);
-    public int elementos();
+public interface HashTable<K extends Comparable<K>, T extends Comparable<T>> extends Iterable<Element<K, T>> {
+    public void insert(K key, T value) throws ElementAlreadyExistsException;
+    public Element<K ,T> find(K clave);
+    public void delete(K clave);
+    public int elements();
 }

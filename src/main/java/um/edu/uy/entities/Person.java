@@ -7,7 +7,6 @@ public abstract class Person {
     public Person(String personId, String name) {
         this.personId = personId;
         this.name = name;
-
     }
 
     public String getPersonId() {

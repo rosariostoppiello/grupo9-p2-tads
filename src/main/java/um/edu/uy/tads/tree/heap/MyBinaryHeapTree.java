@@ -2,11 +2,11 @@ package um.edu.uy.tads.tree.heap;
 
 public interface MyBinaryHeapTree<K extends Comparable<K>,T> {
 
-    void agregar(K key, T value);
+    void add(K key, T value);
 
-    DatoHeap<K,T> eliminar();
+    HeapData<K,T> delete();
 
-    int tamanio();
+    int sizeHeap();
 
     String toString();
 

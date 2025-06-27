@@ -32,20 +32,7 @@ public class Main {
 
             if (option == 1) {
                 long startTime = System.currentTimeMillis();
-                System.out.println("Cargando datos...");
-                uMovieSystem.loadMovies(); // movies, collections, languages, genres
-                uMovieSystem.loadRatings();
-                uMovieSystem.loadCredits();
-
-                System.out.println(uMovieSystem.getGenresById().elementos());
-                System.out.println(uMovieSystem.getLanguagesByName().elementos());
-                System.out.println(uMovieSystem.getCollectionsById().elementos());
-                System.out.println(uMovieSystem.getMoviesById().elementos());
-
-                System.out.println(uMovieSystem.getDirectorsById().elementos()); // 19741 - yo: 19867
-                System.out.println(uMovieSystem.getActorsById().elementos()); // 200979 - yo: 206049
-                // ratings 1 000 000
-
+                uMovieSystem.loadData();
                 long endTime = System.currentTimeMillis();
                 System.out.println("Carga de datos exitosa, tiempo de ejecución de la carga: " + (endTime-startTime) + " ms");
 

@@ -1,17 +1,15 @@
 package um.edu.uy.tads.list.linked;
 
-import um.edu.uy.tads.exceptions.EmptyQueueException;
 import um.edu.uy.tads.list.MyList;
-import um.edu.uy.tads.stack.MyStack;
-import um.edu.uy.tads.queue.MyQueue;
 
-import java.util.EmptyStackException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class MyLinkedListImpl<T extends Comparable<T>> implements MyList<T>, MyQueue<T>, MyStack<T> {
+public class MyLinkedListImpl<T extends Comparable<T>> implements MyList<T> {
 
     private Node<T> head;
     private Node<T> tail;
-    private int largo;
+    private int size;
 
     // ================================================================================================================
     // MyList<T>
@@ -20,200 +18,193 @@ public class MyLinkedListImpl<T extends Comparable<T>> implements MyList<T>, MyQ
     public MyLinkedListImpl() {
         this.head = null;
         this.tail = null;
-        this.largo = 0;
+        this.size = 0;
     }
    
     @Override
     public Boolean isEmpty() {
-        return largo == 0;
+        return size == 0;
     }
 
     @Override
-    public int largo() {
-        return largo;
+    public int size() {
+        return size;
     }
 
     @Override
-    public void imprimirLista() {
+    public void printList() {
         Node<T> actual = head;
         while (actual != null) {
-            System.out.print(actual.getValor() + " -> ");
+            System.out.print(actual.getValue() + " -> ");
             actual = actual.getNext();
         }
         System.out.println("null");
     }
         
     @Override
-    public T obtener(int index) {
-        if (index < largo) {
-            Node<T> nodoActual = this.head;
+    public T find(int index) {
+        if (index < size) {
+            Node<T> actualNode = this.head;
             for (int i = 0; i < index; i++) {
-                nodoActual = nodoActual.getNext();
+                actualNode = actualNode.getNext();
             }
-            return nodoActual.getValor();
+            return actualNode.getValue();
         } else return null;
     }
         
     @Override
-    public void agregar(T obj, Integer index) {
-        Node<T> nodoNuevo = new Node<>();
-        nodoNuevo.setValor(obj);
+    public void add(T obj, Integer index) {
+        Node<T> newNode = new Node<>();
+        newNode.setValue(obj);
 
-        // esto en caso de que se desee agregar al final
         if (index == null) {
             if (isEmpty()) {
-                head = nodoNuevo;
-                tail = nodoNuevo;
+                head = newNode;
+                tail = newNode;
             }
             else {
-                tail.setNext(nodoNuevo);
-                tail = nodoNuevo;
+                tail.setNext(newNode);
+                tail = newNode;
             }
         }
 
-        // para agregar en una posición en particular
-        else if (index == 0) { // si quiere insertar al inicio
-            nodoNuevo.setNext(head);
-            head = nodoNuevo;
-            if (largo == 0) { // si la lista estaba vacía
-                tail = nodoNuevo;
+        else if (index == 0) {
+            newNode.setNext(head);
+            head = newNode;
+            if (size == 0) {
+                tail = newNode;
             }
         }
         else {
-            if (index < largo) {
+            if (index < size) {
                 Node<T> nodoActual = head;
                 for (int i = 0; i < index - 1; i++) {
                     nodoActual = nodoActual.getNext();
                 }
                 Node<T> nodoSiguiente = nodoActual.getNext();
-                nodoActual.setNext(nodoNuevo); // conecto nodo actual a nodo nuevo
-                nodoNuevo.setNext(nodoSiguiente); // conecto nodo nuevo al siguiente nodo
+                nodoActual.setNext(newNode);
+                newNode.setNext(nodoSiguiente);
             }
         }
 
-    largo++; // aumento el tamaño de la lista
+    size++;
     }
 
     @Override
-    public void eliminar(int index) {
-        // index fuera de rango
-        if (index < 0 || index >= largo) {
-            throw new IndexOutOfBoundsException("Índice fuera de los límites de la lista");
+    public void delete(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds.");
         }
 
-        if (index == 0) { // eliminar primer elemento
+        if (index == 0) {
             head = head.getNext();
-            if (largo == 1) {
+            if (size == 1) {
                 tail = null;
             }
         } else {
-            Node<T> nodoActual = head;
+            Node<T> actualNode = head;
             for (int i = 0; i < index - 1; i++) {
-                nodoActual = nodoActual.getNext();
+                actualNode = actualNode.getNext();
             }
-            Node<T> nodoAEliminar = nodoActual.getNext();
-            Node<T> nodoPosteriorAlQueElimino = nodoAEliminar.getNext();
-            nodoActual.setNext(nodoPosteriorAlQueElimino);
-            nodoAEliminar.setNext(null);
-            // ahora el nodo index-1 apunta al nodo index+1 por lo que el Garbage Collector
-            // termina viendo que el nodo a eliminar no lo puedo acceder con nada y además
-            // su next es null
-            if (nodoAEliminar == tail) {
-                tail = nodoActual;
+            Node<T> nodeToDelete = actualNode.getNext();
+            Node<T> nextNodeToTheNodeToDelete = nodeToDelete.getNext();
+            actualNode.setNext(nextNodeToTheNodeToDelete);
+            nodeToDelete.setNext(null);
+            if (nodeToDelete == tail) {
+                tail = actualNode;
             }
         }
-        largo--;
+        size--;
     }
 
     @Override
-    public Boolean elementoSeEncuentra(T obj) {
-        Node<T> nodoActual = head;
+    public Boolean elementExistsIn(T obj) {
+        Node<T> actualNode = head;
 
-        while (nodoActual != null) {
-            if (nodoActual.getValor().equals(obj)) {
+        while (actualNode != null) {
+            if (actualNode.getValue().equals(obj)) {
                 return true;
             }
-            nodoActual = nodoActual.getNext();
+            actualNode = actualNode.getNext();
         }
         return false;
     }
 
     @Override
     public void addFirst(T value) {
-        Node<T> nuevoNodo = new Node<>();
-        nuevoNodo.setValor(value);
-        nuevoNodo.setNext(head);
-        head = nuevoNodo;
+        Node<T> newNode = new Node<>();
+        newNode.setValue(value);
+        newNode.setNext(head);
+        head = newNode;
 
-        if (largo == 0) { // caso lista vacía
-            tail = nuevoNodo;
+        if (size == 0) {
+            tail = newNode;
         }
-        largo++;
+        size++;
     }
         
     @Override
     public void addLast(T value) {
-        Node<T> nuevoNodo = new Node<>();
-        nuevoNodo.setValor(value);
-        nuevoNodo.setNext(null);
+        Node<T> newNode = new Node<>();
+        newNode.setValue(value);
+        newNode.setNext(null);
 
-        if (largo == 0) { // caso lista vacía
-            head = nuevoNodo;
-            tail = nuevoNodo;
+        if (size == 0) {
+            head = newNode;
+            tail = newNode;
         } else {
-            tail.setNext(nuevoNodo);
-            tail = nuevoNodo; // esto no va a fuera a pesar de estar en ambos pues si lo pongo
-                                // antes de ese setNext, pierdo el dato sobre qué era antes ultimo
+            tail.setNext(newNode);
+            tail = newNode;
         }
-        largo++;
+        size++;
     }
 
     @Override
-    public void intercambiar(T obj, int direccion) {
+    public void swap(T obj, int direction) {
         if (head == null || head.getNext() == null) {
-            return; // para intercambiar tiene que haber al menos dos elementos
+            return;
         }
 
         Node<T> actual = head;
-        Node<T> previo = null;
-        Node<T> previoprevio = null;
+        Node<T> previous = null;
+        Node<T> previousPrevious = null;
 
-        while (actual != null && !actual.getValor().equals(obj)) { // recorre hasta encontrar al elemento
-            previoprevio = previo;
-            previo = actual;
+        while (actual != null && !actual.getValue().equals(obj)) {
+            previousPrevious = previous;
+            previous = actual;
             actual = actual.getNext();
         }
 
-        if (actual == null) { // si no lo encuentra y llega a pasar al último nodo da null
+        if (actual == null) {
             System.out.println("No se encontró el elemento");
             return;
         }
 
-        if (direccion == -1) { // el intercambio, si es -1 con el anterior
-            if (previo == null) {
+        if (direction == -1) {
+            if (previous == null) {
                 return;
             }
 
-            previo.setNext(actual.getNext());
-            actual.setNext(previo);
+            previous.setNext(actual.getNext());
+            actual.setNext(previous);
 
-            if (previoprevio != null) {
-                previoprevio.setNext(actual);
+            if (previousPrevious != null) {
+                previousPrevious.setNext(actual);
             } else {
-                head = actual; // si intercambiamos con el primer nodo, actual se convierte en head
+                head = actual;
             }
         }
-        else if (direccion == 1) { // intercambiar con el siguiente
+        else if (direction == 1) {
             Node<T> siguiente = actual.getNext();
             if (siguiente == null) {
-                return; // no se puede intercambiar si es el último elemento
+                return;
             }
 
             actual.setNext(siguiente.getNext());
             siguiente.setNext(actual);
 
-            if (previo != null) {
-                previo.setNext(siguiente);
+            if (previous != null) {
+                previous.setNext(siguiente);
             } else {
                 head = siguiente;
             }
@@ -225,176 +216,89 @@ public class MyLinkedListImpl<T extends Comparable<T>> implements MyList<T>, MyQ
     }
 
     @Override
-    public MyLinkedListImpl<T> agregarLista(MyLinkedListImpl<T> listaAgregar) {
-        MyLinkedListImpl<T> resultado = new MyLinkedListImpl<>();
+    public MyLinkedListImpl<T> addList(MyLinkedListImpl<T> listToAdd) {
+        MyLinkedListImpl<T> result = new MyLinkedListImpl<>();
         Node<T> actual = this.head;
 
         while (actual != null) {
-            if (listaAgregar.elementoSeEncuentra(actual.getValor())) {
-                resultado.addLast(actual.getValor());
+            if (listToAdd.elementExistsIn(actual.getValue())) {
+                result.addLast(actual.getValue());
             }
             actual = actual.getNext();
         }
-        return resultado;
+        return result;
     }
 
     @Override
-    public MyLinkedListImpl<T> juntarListasSinInterseccion(MyLinkedListImpl<T> lista2) {
-        MyLinkedListImpl<T> resultado = new MyLinkedListImpl<>();
+    public MyLinkedListImpl<T> addUpListsWithoutIntersection(MyLinkedListImpl<T> list2) {
+        MyLinkedListImpl<T> result = new MyLinkedListImpl<>();
 
         Node<T> actual = head;
-        while (actual != null) { // si no está en lista2, lo agrega a resultado
-            if (!lista2.elementoSeEncuentra(actual.getValor())) {
-                resultado.addLast(actual.getValor());
+        while (actual != null) {
+            if (!list2.elementExistsIn(actual.getValue())) {
+                result.addLast(actual.getValue());
             }
             actual = actual.getNext();
         }
 
-        Node<T> actual2 = lista2.head; // también lo hago desde la lista2
+        Node<T> actual2 = list2.head;
         while (actual2 != null) {
-            if (!elementoSeEncuentra(actual2.getValor())) {
-                resultado.addLast(actual2.getValor());
+            if (!elementExistsIn(actual2.getValue())) {
+                result.addLast(actual2.getValue());
             }
             actual2 = actual2.getNext();
         }
-        return resultado;
+        return result;
     }
 
     @Override
-    public void addOrdered(T elemento) {
-        Node<T> nodoNuevo = new Node<>();
-        nodoNuevo.setValor(elemento);
+    public void addOrdered(T element) {
+        Node<T> newNode = new Node<>();
+        newNode.setValue(element);
 
-        if (head == null || elemento.compareTo(head.getValor()) < 0) {
-            nodoNuevo.setNext(head); // si no hay head al inicio o si es menor que el head
-            head = nodoNuevo;
+        if (head == null || element.compareTo(head.getValue()) < 0) {
+            newNode.setNext(head);
+            head = newNode;
             if (tail == null) {
-                tail = nodoNuevo;
+                tail = newNode;
             }
         } else {
-            Node<T> nodoActual = head;
-            while (nodoActual.getNext() != null && elemento.compareTo(nodoActual.getNext().getValor()) > 0 ) {
-                nodoActual = nodoActual.getNext();
+            Node<T> actualNode = head;
+            while (actualNode.getNext() != null && element.compareTo(actualNode.getNext().getValue()) > 0 ) {
+                actualNode = actualNode.getNext();
             }
 
-            nodoNuevo.setNext(nodoActual.getNext()); // el next del
-            nodoActual.setNext(nodoNuevo);
+            newNode.setNext(actualNode.getNext());
+            actualNode.setNext(newNode);
 
-            if (nodoNuevo.getNext() == null) {
-                tail = nodoNuevo;
+            if (newNode.getNext() == null) {
+                tail = newNode;
             }
         }
-        largo++;
+        size++;
     }
 
-    // ================================================================================================================
-    // MyQueue<T>
-    // ================================================================================================================
-
     @Override
-    public void enqueue(T element) { // este metodo mejora con el uso de tail
-        Node<T> nodoAgrego = new Node<>(element);
-        if (largo == 0) {
-            head = nodoAgrego;
-            tail = nodoAgrego;
-        } else {
-            tail.setNext(nodoAgrego); // agregar al final
-            tail = nodoAgrego;
+    public Iterator<T> iterator() {
+        return new MyListIterator();
+    }
+
+    private class MyListIterator implements Iterator<T> {
+        private Node<T> current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
         }
-        largo++;
-    }
 
-    @Override
-    public T dequeue() throws EmptyQueueException { // saco al head
-        if (largo == 0) {
-            throw new EmptyQueueException();
-        } else {
-            Node<T> nodoBorrar = head;
-            T valorBorrar = head.getValor();
-            head = head.getNext();
-            nodoBorrar.setNext(null); // esto no es necesario, pero es Garbage Collector Friendly (+ rendimiento)
-            if (head == null) tail = null; // si la queue queda vacía, tail también se vuelve null
-            largo--;
-            return valorBorrar;
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No hay más elementos");
+            }
+            T data = current.getValue();
+            current = current.getNext();
+            return data;
         }
     }
-
-    @Override
-    public T peek() throws EmptyQueueException {
-        if (isEmpty()) {
-            throw new EmptyQueueException();
-        }
-        return head.getValor();
-    }
-
-    @Override
-    public void makeEmpty() {
-        while (head != null) {
-            Node<T> temp = head;
-            head = head.getNext();
-            temp.setNext(null); // GC friendly como en dequeue
-        }
-        tail = null;
-        largo = 0;
-    }
-
-    @Override // para devolver todos los elementos que tiene la queue como un String
-    public String toString() { // mejor usar clase StringBuilder en vez de un for, pues no crea un objeto cada vez
-        StringBuilder sb = new StringBuilder("[");
-        Node<T> actual = head;
-        while (actual != null) {
-            sb.append(actual.getValor()); // append valor
-            if (actual.getNext() != null) sb.append(", "); // pongo coma entre elementos
-            actual = actual.getNext();
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
-    @Override
-    public int tamanio() {
-        return largo;
-    }
-
-    @Override
-    public void enqueueWithPriority(T value) {
-        addOrdered(value);
-    }
-
-    // ================================================================================================================
-    // MyStack<T>
-    // ================================================================================================================
-
-    @Override
-    public void pop() throws EmptyStackException {
-        if (largo == 0) {
-            throw new EmptyStackException();
-        }
-        head = head.getNext();
-        largo --;
-    }
-
-    @Override
-    public T top() throws EmptyStackException {
-        if (largo == 0) {
-            throw new EmptyStackException();
-        }
-        return head.getValor();
-    }
-
-    @Override
-    public void push(T element) {
-        Node<T> nodoAgrego = new Node<>(element);
-        nodoAgrego.setNext(head);
-        head = nodoAgrego;
-        largo ++;
-    }
-
-    @Override
-    public void makeEmptyStack() {
-        while (!isEmpty()) {
-            pop();
-        }
-    }
-
 }

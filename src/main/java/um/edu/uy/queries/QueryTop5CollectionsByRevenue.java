@@ -2,7 +2,7 @@ package um.edu.uy.queries;
 
 import um.edu.uy.entities.Collection;
 import um.edu.uy.entities.Movie;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.MyList;
 
@@ -26,17 +26,17 @@ public class QueryTop5CollectionsByRevenue {
                                     String[] ids, String[] names, int[] counts, double[] revenues, String[] movieLists) {
         for (int i = 1; i <= 5000; i++) {
 
-            Elemento<String, Collection> element = collectionsById.pertenece(String.valueOf(i));
+            Element<String, Collection> element = collectionsById.find(String.valueOf(i));
             if (element == null) continue;
 
-            Collection collection = element.getValor();
+            Collection collection = element.getValue();
             MyList<Movie> movies = collection.getMoviesCollection();
 
             double totalRevenue = 0;
             StringBuilder idList = new StringBuilder("[");
 
-            for (int j = 0; j < movies.largo(); j++) {
-                Movie movie = movies.obtener(j);
+            for (int j = 0; j < movies.size(); j++) {
+                Movie movie = movies.find(j);
                 totalRevenue += movie.getRevenue();
 
                 if (j > 0) idList.append(",");
@@ -46,21 +46,21 @@ public class QueryTop5CollectionsByRevenue {
 
             addTop5(ids, names, counts, revenues, movieLists,
                     collection.getCollectionId(), collection.getCollectionName(),
-                    movies.largo(), totalRevenue, idList.toString());
+                    movies.size(), totalRevenue, idList.toString());
         }
     }
 
     private void processIndMovies(HashTable<String, Movie> moviesById, HashTable<String, Collection> collectionsById,
                                   String[] ids, String[] names, int[] counts, double[] revenues, String[] movieLists) {
         for (int i = 1; i <= 50000; i++) {
-            Elemento<String, Movie> element = moviesById.pertenece(String.valueOf(i));
+            Element<String, Movie> element = moviesById.find(String.valueOf(i));
             if (element == null) continue;
 
-            Movie movie = element.getValor();
+            Movie movie = element.getValue();
             String collectionId = movie.getBelongsToCollection();
 
             if (collectionId == null || collectionId.isEmpty() ||
-                    collectionsById.pertenece(collectionId) == null) {
+                    collectionsById.find(collectionId) == null) {
 
                 String movieList = "[" + movie.getMovieId() + "]";
 

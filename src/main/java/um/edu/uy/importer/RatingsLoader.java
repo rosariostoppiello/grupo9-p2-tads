@@ -10,7 +10,7 @@ import um.edu.uy.entities.Movie;
 import um.edu.uy.entities.Rating;
 
 import um.edu.uy.tads.hash.ClosedHashTableImpl;
-import um.edu.uy.tads.hash.Elemento;
+import um.edu.uy.tads.hash.Element;
 import um.edu.uy.tads.hash.HashTable;
 import um.edu.uy.tads.list.MyList;
 import um.edu.uy.tads.list.linked.MyLinkedListImpl;
@@ -28,7 +28,7 @@ public class RatingsLoader {
             reader.readLine(); // skip header line
 
             String[] parts;
-            Elemento<String,Movie> movieElem;
+            Element<String,Movie> movieElem;
             Movie movie;
             MyList<Rating> ratings;
             Rating rating;
@@ -36,7 +36,7 @@ public class RatingsLoader {
             String userId;
             String movieId;
             String userMovieKey;
-            Elemento<String, Rating> existingRatingElem;
+            Element<String, Rating> existingRatingElem;
 
             while ((line = reader.readLine()) != null) {
                 parts = splitLine(line);
@@ -44,16 +44,16 @@ public class RatingsLoader {
 
                 userId = parts[0];
                 movieId = parts[1];
-                movieElem = moviesById.pertenece(movieId);
+                movieElem = moviesById.find(movieId);
 
                 if (movieElem != null) { // movie exists
-                    movie = movieElem.getValor();
+                    movie = movieElem.getValue();
 
                     userMovieKey = userId + movieId;
-                    existingRatingElem = userMovieRatings.pertenece(userMovieKey);
+                    existingRatingElem = userMovieRatings.find(userMovieKey);
 
                     if (existingRatingElem != null) { // if the user had already rated that movie - overwrite
-                        Rating existingRating = existingRatingElem.getValor();
+                        Rating existingRating = existingRatingElem.getValue();
                         existingRating.setRating(Float.parseFloat(parts[2]));
                         existingRating.setDate(Instant.ofEpochSecond(Long.parseLong(parts[3]))
                                 .atZone(ZoneId.systemDefault()).toLocalDate());
@@ -64,7 +64,7 @@ public class RatingsLoader {
                                 Float.parseFloat(parts[2]),
                                 Instant.ofEpochSecond(Long.parseLong(parts[3]))
                                         .atZone(ZoneId.systemDefault()).toLocalDate());
-                        userMovieRatings.insertar(userMovieKey, rating);
+                        userMovieRatings.insert(userMovieKey, rating);
                         ratings = movie.getRatings();
                         if (ratings == null) {
                             ratings = new MyLinkedListImpl<>();
