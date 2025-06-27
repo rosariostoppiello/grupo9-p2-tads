@@ -1,6 +1,7 @@
 package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class Language implements Comparable<Language> {
 
@@ -9,6 +10,7 @@ public class Language implements Comparable<Language> {
 
     public Language(String languageId) {
         this.languageId = languageId;
+        this.moviesLanguage = new MyLinkedListImpl<>();
     }
 
     public void addMovie(Movie movie) {

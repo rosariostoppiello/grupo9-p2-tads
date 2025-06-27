@@ -2,7 +2,7 @@ package um.edu.uy.entities;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import um.edu.uy.tads.list.linked.MyLinkedListImpl;
+import um.edu.uy.tads.list.linked.MyLinkedListImplTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +15,8 @@ public class GenreTest {
 
     @BeforeEach
     void setUp() {
-        genre = new Genre("1", "Action", new MyLinkedListImpl<>());
-        genre2 = new Genre("2", "Comedy", new MyLinkedListImpl<>());
+        genre = new Genre("1", "Action");
+        genre2 = new Genre("2", "Comedy");
         movie1 = new Movie("100", "Die Hard", "en", "141600000", null);
         movie2 = new Movie("101", "Mad Max", "en", "378858340", null);
 

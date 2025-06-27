@@ -11,7 +11,7 @@ public class Collection implements Comparable<Collection> {
 
     private MyList<Movie> moviesCollection;
 
-    public Collection(String collectionId, String collectionName, MyList<Movie> moviesCollection) {
+    public Collection(String collectionId, String collectionName) {
         this.collectionId = collectionId;
         this.collectionName = collectionName;
         this.moviesCollection = new MyLinkedListImpl<>();

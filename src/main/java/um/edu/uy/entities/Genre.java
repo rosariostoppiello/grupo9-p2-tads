@@ -1,6 +1,7 @@
 package um.edu.uy.entities;
 
 import um.edu.uy.tads.list.MyList;
+import um.edu.uy.tads.list.linked.MyLinkedListImpl;
 
 public class Genre implements Comparable<Genre> {
 
@@ -8,10 +9,10 @@ public class Genre implements Comparable<Genre> {
     private String genreName;
     private MyList<Movie> moviesGenre;
 
-    public Genre(String genreId, String genreName, MyList<Movie> moviesGenre) {
+    public Genre(String genreId, String genreName) {
         this.genreId = genreId;
         this.genreName = genreName;
-        this.moviesGenre = moviesGenre;
+        this.moviesGenre = new MyLinkedListImpl<>();
     }
 
     public int getTotalRatingsCount() {

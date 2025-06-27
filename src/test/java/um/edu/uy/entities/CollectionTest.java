@@ -1,6 +1,6 @@
 package um.edu.uy.entities;
 
-import um.edu.uy.tads.list.linked.MyLinkedListImpl;
+import um.edu.uy.tads.list.linked.MyLinkedListImplTest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +16,8 @@ public class CollectionTest {
 
     @BeforeEach
     void setUp() {
-        collection = new Collection("1", "Marvel Cinematic Universe", new MyLinkedListImpl<>());
-        collection2 = new Collection("2", "DC Extended Universe", new MyLinkedListImpl<>());
+        collection = new Collection("1", "Marvel Cinematic Universe");
+        collection2 = new Collection("2", "DC Extended Universe");
         movie1 = new Movie("100", "Iron Man", "en", "585174222", null);
         movie2 = new Movie("101", "Thor", "en", "449326618", null);
     }
@@ -44,7 +44,7 @@ public class CollectionTest {
     void testCompareTo() {
         assertTrue(collection.compareTo(collection2) < 0); // "1" < "2"
         assertTrue(collection2.compareTo(collection) > 0); // "2" > "1"
-        assertEquals(0, collection.compareTo(new Collection("1", "Different Name", new MyLinkedListImpl<>())));
+        assertEquals(0, collection.compareTo(new Collection("1", "Different Name")));
     }
 
 

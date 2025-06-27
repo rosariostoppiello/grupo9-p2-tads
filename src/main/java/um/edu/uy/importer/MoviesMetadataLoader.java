@@ -104,7 +104,7 @@ public class MoviesMetadataLoader {
             } else {
                 name = movie.getTitle();
             }
-            collection = new Collection(collectionId, name, new MyLinkedListImpl<>());
+            collection = new Collection(collectionId, name);
             collectionsById.insert(collectionId, collection);
         } else {
             collection = element.getValue();
@@ -141,7 +141,7 @@ public class MoviesMetadataLoader {
         Genre genre;
 
         if (element == null) {
-            genre = new Genre(genreId, genreName, new MyLinkedListImpl<>());
+            genre = new Genre(genreId, genreName);
             genresById.insert(genreId, genre);
         } else {
             genre = element.getValue();
