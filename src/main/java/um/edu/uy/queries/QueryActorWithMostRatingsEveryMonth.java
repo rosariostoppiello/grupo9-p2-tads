@@ -102,10 +102,14 @@ public class QueryActorWithMostRatingsEveryMonth {
             }
         }
 
+        final String[] monthNames = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
         for (int month = 1; month <= 12; month++) {
             if (bestActorByMonth[month] != null) {
                 ActorMonthData best = bestActorByMonth[month];
-                System.out.println(month + ", " + best.actorName + ", " +
+                String monthName = monthNames[month - 1];
+                System.out.println(monthName + ", " + best.actorName + ", " +
                         best.moviesCount + ", " + best.ratingsCount);
             }
         }
