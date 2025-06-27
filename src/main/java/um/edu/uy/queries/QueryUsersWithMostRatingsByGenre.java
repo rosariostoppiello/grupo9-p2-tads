@@ -11,11 +11,9 @@ import um.edu.uy.tads.tree.heap.HeapData;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
-// query 6
 public class QueryUsersWithMostRatingsByGenre {
 
     public void queryUsersWithMostRatingsByGenre(HashTable<String, Genre> genresById) {
-        // find top 10 genres
         MyBinaryHeapTree<Integer, Genre> top10GenresHeap = new MyBinaryHeapTreeImpl<>(false, 11);
 
         for (Element<String, Genre> element : genresById) {

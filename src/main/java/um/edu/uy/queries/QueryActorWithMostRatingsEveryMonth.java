@@ -31,7 +31,6 @@ public class QueryActorWithMostRatingsEveryMonth {
                                                     HashTable<String, Actor> actorsById) {
         ActorMonthData[] bestActorByMonth = new ActorMonthData[13];
 
-        // optimization --> preload movies and precalculate ratings by month for each movie
         int movieCount = moviesById.elements();;
         Movie[] allMovies = new Movie[moviesById.elements()];
         int movieIndex = 0;
@@ -59,7 +58,6 @@ public class QueryActorWithMostRatingsEveryMonth {
             } catch (ElementAlreadyExistsException e) {}
         }
 
-        // iteration by actor
         for (Element<String, Actor> actorElement : actorsById) {
             Actor actor = actorElement.getValue();
             String actorId = actorElement.getKey();

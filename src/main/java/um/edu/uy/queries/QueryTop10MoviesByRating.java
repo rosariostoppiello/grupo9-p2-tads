@@ -11,13 +11,11 @@ import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
 import java.util.Arrays;
 
-// query 2 - 340 ms aprox.
 public class QueryTop10MoviesByRating {
 
     public void queryTop10MoviesByRating(HashTable<String, Movie> movies) {
         MyBinaryHeapTree<Double, Movie> top10Heap = new MyBinaryHeapTreeImpl<>(false, 11);
 
-        // heap insertions
         for (Element<String, Movie> elemento : movies) {
             Movie movie = elemento.getValue();
 
@@ -46,14 +44,12 @@ public class QueryTop10MoviesByRating {
             }
         }
 
-        // temporal array
         HeapData<Double, Movie>[] tempArray = new HeapData[top10Heap.sizeHeap()];
         int count = top10Heap.sizeHeap();
         for (int i = 0; i < count; i++) {
             tempArray[i] = top10Heap.delete();
         }
 
-        // print in reverse order
         for (int i = count - 1; i >= 0; i--) {
             System.out.println(tempArray[i].getData().getMovieId() + ", " +
                     tempArray[i].getData().getTitle() + " " +
