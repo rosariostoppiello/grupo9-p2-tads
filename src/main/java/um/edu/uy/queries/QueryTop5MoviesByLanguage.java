@@ -17,7 +17,7 @@ public class QueryTop5MoviesByLanguage {
             int[] ratingCounts = new int[5];
 
             topMoviesLanguage(movies, language, topMovies, ratingCounts);
-            printResults(languageName, topMovies, ratingCounts, languageName);
+            printResults(topMovies, ratingCounts, languageName);
         }
     }
 
@@ -59,9 +59,7 @@ public class QueryTop5MoviesByLanguage {
         }
     }
 
-    private void printResults(String languageName, Movie[] topMovies, int[] ratingCounts, String fullLanguageName) {
-        System.out.println(languageName + ":");
-
+    private void printResults(Movie[] topMovies, int[] ratingCounts, String fullLanguageName) {
         for (int i = 0; i < 5; i++) {
             if (topMovies[i] != null) {
                 System.out.println(topMovies[i].getMovieId() + ", " +

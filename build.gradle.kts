@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("application")
 }
 
 group = "um.edu.uy"
@@ -14,10 +15,24 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+application {
+    mainClass.set("um.edu.uy.Main")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 
-dependencies {
-    implementation("com.opencsv:opencsv:5.9")
+tasks.jar {
+    archiveBaseName.set("grupo9-p2-tads")
+
+    manifest {
+        attributes("Main-Class" to "um.edu.uy.Main")
+    }
+
+    from(configurations.runtimeClasspath.get().map {
+        if (it.isDirectory) it else zipTree(it)
+    })
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
