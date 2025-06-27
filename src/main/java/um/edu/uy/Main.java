@@ -59,7 +59,7 @@ public class Main {
                             redirectQueryUMovie(uMovieSystem, option);
                             break;
                         case 7:
-                            System.out.println("Gracias por su(s) consulta(s)!");
+                            // System.out.println("Gracias por su(s) consulta(s)!");
                             break consultas;
                         default:
                             System.out.println("El número ingresado no se encuentra dentro de las opciones. Por favor, " +
