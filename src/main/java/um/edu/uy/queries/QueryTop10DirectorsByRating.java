@@ -12,8 +12,7 @@ import java.util.Arrays;
 public class QueryTop10DirectorsByRating {
 
     public void queryTop10DirectorsByRating(HashTable<String, Movie> moviesById, HashTable<String, Director> directorsById) {
-        System.out.println("Top 10 directors by rating:");
-        System.out.println("Director name, Number of movies, Median rating");
+        System.out.println("Top 10 directores por rating:");
 
         Director[] top10 = new Director[10];
         Float[] medians = new Float[10];
