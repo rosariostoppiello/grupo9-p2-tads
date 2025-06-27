@@ -60,6 +60,7 @@ public class QueryUsersWithMostRatingsByGenre {
         }
         top10Array = null;
         top10GenresHeap = null;
+        System.gc();
     }
 
     private String findTopUser(Genre genre) {

@@ -44,14 +44,7 @@ public class QueryActorWithMostRatingsEveryMonth {
 
         for (int i = 0; i < movieIndex; i++) {
             Movie movie = allMovies[i];
-            int ratingsSize = movie.getRatings().size();
 
-//            for (int ratingIndex = 0; ratingIndex < movie.getRatings().size(); ratingIndex++) {
-//                Rating rating = movie.getRatings().find(ratingIndex);
-//                LocalDate timestamp = rating.getDate();
-//                int month = timestamp.getMonthValue();
-//                movieRatingsByMonth[i][month]++;
-//            }
             for (Rating rating : movie.getRatings()) {
                 LocalDate timestamp = rating.getDate();
                 int month = timestamp.getMonthValue();
@@ -131,5 +124,7 @@ public class QueryActorWithMostRatingsEveryMonth {
             bestActorByMonth[i] = null;
         }
         bestActorByMonth = null;
+
+        System.gc();
     }
 }
