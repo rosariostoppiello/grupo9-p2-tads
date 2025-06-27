@@ -8,6 +8,8 @@ import um.edu.uy.tads.tree.heap.DatoHeap;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTree;
 import um.edu.uy.tads.tree.heap.MyBinaryHeapTreeImpl;
 
+import java.util.Arrays;
+
 // query 2 - 340 ms aprox.
 public class QueryTop10MoviesByRating {
 
@@ -38,6 +40,7 @@ public class QueryTop10MoviesByRating {
                     } else {
                         top10Heap.agregar(minElement.getKey(), minElement.getData());
                     }
+                    minElement = null;
                 }
             }
         }
@@ -55,6 +58,10 @@ public class QueryTop10MoviesByRating {
                     tempArray[i].getData().getTitle() + " " +
                     tempArray[i].getKey());
         }
+
+        Arrays.fill(tempArray, null);
+        tempArray = null;
+        top10Heap = null;
 
     }
 }
