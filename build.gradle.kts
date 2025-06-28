@@ -36,11 +36,3 @@ tasks.jar {
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
-tasks.jar {
-    archiveBaseName.set("grupo9-p2-tads")
-    archiveVersion.set("")
-    manifest {
-        attributes["Main-Class"] = "tu.paquete.principal.Main"
-    }
-}
